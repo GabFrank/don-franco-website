@@ -1,0 +1,59 @@
+{
+  "siteName": "Don Franco",
+  "tagline": "PARRILLA ARTESANAL",
+  "metaDescription": "Parrilla artesanal. Menú, historia, contacto y reservas.",
+  "hero": {
+    "title": "DON FRANCO",
+    "tagline": "RESTAURANTE ARTESANAL",
+    "description": "Cocina de autor en un ambiente único. Conocé nuestro menú y reservá tu mesa.",
+    "ctaText": "VER MENÚ",
+    "backgroundImages": [
+      "https://drive.google.com/file/d/1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL/view?usp=drive_link"
+    ],
+    "backgroundImageDuration": 5
+  },
+  "story": {
+    "title": "NUESTRA HISTORIA",
+    "paragraphs": [
+      "Don Franco nace del amor por la parrilla y la cocina artesanal. Cada corte, cada plato y cada momento en nuestra mesa está pensado para que vivas una experiencia única.",
+      "Trabajamos con materias primas de primera calidad y técnicas tradicionales para ofrecerte el mejor sabor en un ambiente cálido y familiar."
+    ]
+  },
+  "gallery": {
+    "title": "GALERÍA",
+    "intro": "Un vistazo a nuestro espacio y platos.",
+    "emptyMessage": "Las fotos de la galería se configuran desde el contenido (Drive o JSON)."
+  },
+  "reviews": {
+    "title": "LO QUE DICEN NUESTROS CLIENTES",
+    "rating": 4.8,
+    "reviewCount": 120,
+    "linkText": "Ver en Google Maps",
+    "mapsUrl": "https://www.google.com/maps"
+  },
+  "contact": {
+    "title": "CONTACTO",
+    "reservasLabel": "Reservas (WhatsApp)",
+    "reservarCta": "RESERVAR",
+    "phoneLabel": "Teléfono",
+    "phone": "+54 11 1234-5678",
+    "whatsapp": "5491112345678",
+    "addressLabel": "Dirección",
+    "address": "Av. Ejemplo 1234, CABA",
+    "hoursLabel": "Horarios",
+    "hours": "Martes a Domingos 12:00 - 00:00"
+  },
+  "map": {
+    "title": "CÓMO LLEGAR",
+    "embedUrl": "",
+    "fallbackLink": "https://www.google.com/maps"
+  },
+  "footer": {
+    "tagline": "Parrilla Artesanal",
+    "mapsUrl": "https://www.google.com/maps",
+    "instagramUrl": "",
+    "facebookUrl": "",
+    "legalText": "Todos los derechos reservados."
+  }
+}

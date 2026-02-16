@@ -1,0 +1,73 @@
+---
+// Gallery: optional list of { url, alt } from Drive or local
+interface GalleryImage {
+  url: string;
+  alt: string;
+}
+interface Props {
+  title?: string;
+  intro?: string;
+  emptyMessage?: string;
+  images?: GalleryImage[];
+}
+const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", emptyMessage = "Las fotos de la galería se configuran desde el contenido (Drive o JSON).", images = [] } = Astro.props;
+---
+<section id="galeria" class="gallery-section" aria-labelledby="galeria-heading">
+  <div class="container">
+    <h2 id="galeria-heading" class="section-title">{title}</h2>
+    <p class="section-intro">{intro}</p>
+    {images.length > 0 ? (
+      <ul class="gallery-grid">
+        {images.map((img) => (
+          <li>
+            <img src={img.url} alt={img.alt} loading="lazy" class="gallery-img" />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="gallery-placeholder">{emptyMessage}</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .gallery-section {
+    background: var(--color-bg);
+  }
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+  .section-intro {
+    color: var(--color-muted);
+    margin-bottom: var(--space-6);
+  }
+  .gallery-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-4);
+  }
+  .gallery-img,
+  .gallery-grid img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+  @media (max-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gallery-placeholder {
+    color: var(--color-muted);
+    font-style: italic;
+  }
+</style>

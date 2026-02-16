@@ -1,0 +1,24 @@
+{
+  "updatedAt": "2026-02-15T16:00:00Z",
+  "menuVersion": "2026.02.15",
+  "categories": [
+    {
+      "id": "parrillas",
+      "title": "PARRILLAS",
+      "order": 1,
+      "items": [
+        {
+          "id": "parrilla-clasica-01",
+          "title": "Parrilla Clásica",
+          "description": "Corte mixto artesanal",
+          "image": {
+            "fileId": "1AbCdEfGhIjKlMnOpQrStUvWxYz",
+            "url": "https://drive.google.com/uc?export=view&id=1AbCdEfGhIjKlMnOpQrStUvWxYz"
+          },
+          "alt": "Parrilla clásica de Don Franco",
+          "isFeatured": true
+        }
+      ]
+    }
+  ]
+}

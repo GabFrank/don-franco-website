@@ -1,0 +1,37 @@
+---
+interface Props {
+  title?: string;
+  paragraphs?: string[];
+}
+const { title = "NUESTRA HISTORIA", paragraphs = [] } = Astro.props;
+---
+<section id="historia" class="story-section" aria-labelledby="historia-heading">
+  <div class="container">
+    <h2 id="historia-heading" class="section-title">{title}</h2>
+    <div class="story-content">
+      {paragraphs.length > 0 ? paragraphs.map((text) => <p>{text}</p>) : (
+        <p>Don Franco nace del amor por la parrilla y la cocina artesanal.</p>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .story-section {
+    background: var(--color-surface);
+  }
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+  .story-content {
+    max-width: 42rem;
+  }
+  .story-content p {
+    color: var(--color-muted);
+    margin-bottom: var(--space-4);
+  }
+</style>

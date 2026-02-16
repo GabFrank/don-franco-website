@@ -1,0 +1,83 @@
+---
+interface Props {
+  siteName?: string;
+  tagline?: string;
+  mapsUrl?: string;
+  instagramUrl?: string;
+  facebookUrl?: string;
+  legalText?: string;
+}
+const {
+  siteName = "Don Franco",
+  tagline = "Parrilla Artesanal",
+  mapsUrl = "https://www.google.com/maps",
+  instagramUrl = "",
+  facebookUrl = "",
+  legalText = "Todos los derechos reservados.",
+} = Astro.props;
+---
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="/logo.png" alt={siteName} width="100" height="36" />
+      <span>{tagline}</span>
+    </div>
+    <div class="footer-links">
+      <a href={mapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a>
+      {instagramUrl && <a href={instagramUrl} target="_blank" rel="noopener noreferrer">Instagram</a>}
+      {facebookUrl && <a href={facebookUrl} target="_blank" rel="noopener noreferrer">Facebook</a>}
+    </div>
+    <p class="footer-legal">&copy; {new Date().getFullYear()} {siteName}. {legalText}</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-border);
+    padding-block: var(--space-8);
+  }
+  .footer-inner {
+    text-align: center;
+  }
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+  }
+  .footer-brand img {
+    height: 2rem;
+    width: auto;
+  }
+  .footer-brand span {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+  }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .footer-links a {
+    color: var(--color-muted);
+    padding: var(--space-2) var(--space-3);
+    min-height: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .footer-legal {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    margin: 0;
+  }
+  @media (max-width: 640px) {
+    .footer-links {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

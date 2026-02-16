@@ -1,0 +1,60 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import MenuFullscreen from "../components/MenuFullscreen.astro";
+import StorySection from "../components/StorySection.astro";
+import GallerySection from "../components/GallerySection.astro";
+import ReviewsSection from "../components/ReviewsSection.astro";
+import ContactSection from "../components/ContactSection.astro";
+import MapSection from "../components/MapSection.astro";
+import Footer from "../components/Footer.astro";
+import { getMenuPageImageUrl } from "../lib/drive";
+
+let menuPages: Array<{ fileId?: string; url?: string; alt: string }> = [];
+let siteConfig: Record<string, unknown> = {};
+try {
+  const data = await import("../../content/menu-pages.json");
+  menuPages = data.default?.pages ?? [];
+} catch {
+  // no menu-pages.json
+}
+try {
+  const data = await import("../../content/site.json");
+  siteConfig = (data.default ?? {}) as Record<string, unknown>;
+} catch {
+  // no site.json
+}
+
+const hero = (siteConfig.hero ?? {}) as Record<string, unknown>;
+const heroBackgroundRaw = hero.backgroundImages;
+const heroBackgroundImages: string[] = Array.isArray(heroBackgroundRaw)
+  ? heroBackgroundRaw
+      .filter((u): u is string => typeof u === "string")
+      .map((url) => getMenuPageImageUrl({ url }) || url)
+      .filter((src) => src !== "")
+  : [];
+
+const story = (siteConfig.story ?? {}) as Record<string, unknown>;
+const gallery = (siteConfig.gallery ?? {}) as Record<string, string>;
+const reviews = (siteConfig.reviews ?? {}) as Record<string, unknown>;
+const contact = (siteConfig.contact ?? {}) as Record<string, string>;
+const mapConfig = (siteConfig.map ?? {}) as Record<string, string>;
+const footer = (siteConfig.footer ?? {}) as Record<string, string>;
+const siteName = (siteConfig.siteName as string) ?? "Don Franco";
+const metaDescription = (siteConfig.metaDescription as string) ?? "Parrilla artesanal. Menú, historia, contacto y reservas.";
+---
+
+<BaseLayout title={`${siteName} | Restaurante Artesanal`} description={metaDescription}>
+  <Header />
+  <main>
+    <Hero title={hero.title as string} tagline={hero.tagline as string} description={hero.description as string} ctaText={hero.ctaText as string} backgroundImages={heroBackgroundImages} backgroundImageDuration={typeof hero.backgroundImageDuration === "number" ? hero.backgroundImageDuration : 5} />
+    <MenuFullscreen pages={menuPages} />
+    <StorySection title={story.title as string} paragraphs={story.paragraphs as string[]} />
+    <GallerySection title={gallery.title} intro={gallery.intro} emptyMessage={gallery.emptyMessage} />
+    <ReviewsSection title={reviews.title as string} rating={reviews.rating as number} reviewCount={reviews.reviewCount as number} linkText={reviews.linkText as string} mapsUrl={reviews.mapsUrl as string} />
+    <ContactSection title={contact.title} reservasLabel={contact.reservasLabel} reservarCta={contact.reservarCta} phoneLabel={contact.phoneLabel} phone={contact.phone} whatsapp={contact.whatsapp} addressLabel={contact.addressLabel} address={contact.address} hoursLabel={contact.hoursLabel} hours={contact.hours} />
+    <MapSection title={mapConfig.title} embedUrl={mapConfig.embedUrl} fallbackLink={mapConfig.fallbackLink} />
+    <Footer siteName={siteName} tagline={footer.tagline} mapsUrl={footer.mapsUrl} instagramUrl={footer.instagramUrl} facebookUrl={footer.facebookUrl} legalText={footer.legalText} />
+  </main>
+</BaseLayout>

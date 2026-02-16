@@ -1,0 +1,203 @@
+---
+const navLinks = [
+  { href: "#", label: "Menú", openMenuViewer: true },
+  { href: "#historia", label: "Historia" },
+  { href: "#galeria", label: "Galería" },
+  { href: "#valoraciones", label: "Valoraciones" },
+  { href: "#contacto", label: "Contacto" },
+  { href: "#mapa", label: "Mapa" },
+];
+---
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="logo-link" aria-label="Don Franco - Inicio">
+      <img src="/logo.png" alt="Don Franco - Parrilla Artesanal" width="140" height="48" />
+    </a>
+    <button type="button" class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu" id="nav-toggle">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+    <nav class="nav" id="nav-menu" aria-label="Principal">
+      <ul class="nav-list">
+        {navLinks.map(({ href, label, openMenuViewer }) => (
+          <li>
+            {openMenuViewer ? (
+              <a href={href} class="nav-link" data-open-menu-viewer>{label}</a>
+            ) : (
+              <a href={href} class="nav-link">{label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  (function () {
+    const toggle = document.getElementById("nav-toggle");
+    const nav = document.getElementById("nav-menu");
+    if (!toggle || !nav) return;
+    function open() {
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Cerrar menú");
+      toggle.classList.add("is-open");
+      nav.classList.add("nav-open");
+      document.body.style.overflow = "hidden";
+    }
+    function close() {
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Abrir menú");
+      toggle.classList.remove("is-open");
+      nav.classList.remove("nav-open");
+      document.body.style.overflow = "";
+    }
+    toggle.addEventListener("click", function () {
+      if (nav.classList.contains("nav-open")) close();
+      else open();
+    });
+    nav.querySelectorAll(".nav-link").forEach(function (link) {
+      link.addEventListener("click", close);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") close();
+    });
+  })();
+</script>
+
+<style>
+  .header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: transparent !important;
+    border-bottom: none;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-3);
+  }
+  .logo-link {
+    display: block;
+  }
+  .logo-link:hover {
+    text-decoration: none;
+    opacity: 0.9;
+  }
+  .logo-link img {
+    height: 2.5rem;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: var(--touch-target-min);
+    min-height: var(--touch-target-min);
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #f2f2f2;
+  }
+  .nav-toggle:hover {
+    color: var(--color-accent);
+  }
+  .nav-toggle:focus-visible {
+    outline: 2px solid #f2f2f2;
+    outline-offset: 2px;
+  }
+  .nav-toggle-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .nav-toggle.is-open .nav-toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .nav-toggle.is-open .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-toggle.is-open .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+  .nav {
+    display: block;
+  }
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .nav-link {
+    color: #f2f2f2;
+    font-weight: 500;
+    padding: var(--space-2) var(--space-3);
+    display: inline-block;
+    min-height: var(--touch-target-min);
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+  }
+  .nav-link:hover {
+    color: var(--color-accent);
+  }
+  @media (max-width: 768px) {
+    .nav-toggle {
+      display: flex;
+    }
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--color-bg);
+      padding: calc(var(--touch-target-min) + var(--space-4)) var(--space-4) var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s, visibility 0.2s;
+    }
+    .nav-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .nav .nav-list {
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+    .nav .nav-list li {
+      width: 100%;
+      max-width: 20rem;
+    }
+    .nav .nav-link {
+      width: 100%;
+      justify-content: center;
+      min-height: var(--touch-target-min);
+      padding: var(--space-4);
+      font-size: 1.125rem;
+    }
+  }
+  @media (min-width: 769px) {
+    .nav-toggle.is-open .nav-toggle-bar {
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>

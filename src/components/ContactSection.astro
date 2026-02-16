@@ -1,0 +1,111 @@
+---
+interface Props {
+  title?: string;
+  reservasLabel?: string;
+  reservarCta?: string;
+  phoneLabel?: string;
+  phone?: string;
+  whatsapp?: string;
+  addressLabel?: string;
+  address?: string;
+  hoursLabel?: string;
+  hours?: string;
+}
+const {
+  title = "CONTACTO",
+  reservasLabel = "Reservas (WhatsApp)",
+  reservarCta = "RESERVAR",
+  phoneLabel = "Teléfono",
+  phone = "+54 11 1234-5678",
+  whatsapp = "5491112345678",
+  addressLabel = "Dirección",
+  address = "Av. Ejemplo 1234, CABA",
+  hoursLabel = "Horarios",
+  hours = "Martes a Domingos 12:00 - 00:00",
+} = Astro.props;
+const waUrl = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
+---
+<section id="contacto" class="contact-section" aria-labelledby="contacto-heading">
+  <div class="container">
+    <h2 id="contacto-heading" class="section-title">{title}</h2>
+    <div class="contact-grid">
+      <div class="contact-block">
+        <h3 class="contact-label">{reservasLabel}</h3>
+        <a href={waUrl} target="_blank" rel="noopener noreferrer" class="contact-cta">{reservarCta}</a>
+      </div>
+      <div class="contact-block">
+        <h3 class="contact-label">{phoneLabel}</h3>
+        <a href={`tel:${phone.replace(/\s/g, "")}`}>{phone}</a>
+      </div>
+      <div class="contact-block">
+        <h3 class="contact-label">{addressLabel}</h3>
+        <p>{address}</p>
+      </div>
+      <div class="contact-block">
+        <h3 class="contact-label">{hoursLabel}</h3>
+        <p>{hours}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    background: var(--color-bg);
+  }
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-6);
+  }
+  .contact-block p,
+  .contact-block a {
+    color: var(--color-muted);
+    margin: 0;
+  }
+  .contact-label {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--color-accent);
+    margin: 0 0 var(--space-2);
+  }
+  .contact-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-target-min);
+    padding: var(--space-3) var(--space-6);
+    background: transparent;
+    color: var(--color-text);
+    border: 2px solid var(--color-accent);
+    border-radius: 4px;
+    font-family: var(--font-title);
+    letter-spacing: 0.05em;
+  }
+  .contact-cta:hover {
+    background: var(--color-accent);
+    color: var(--color-bg);
+    text-decoration: none;
+  }
+  .contact-block a:not(.contact-cta) {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) 0;
+    min-height: var(--touch-target-min);
+  }
+  @media (max-width: 640px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+    .contact-cta {
+      width: 100%;
+    }
+  }
+</style>

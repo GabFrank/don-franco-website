@@ -1,0 +1,151 @@
+---
+import type { MenuCategory } from "../types/menu";
+import { normalizeMenuItemImage } from "../lib/drive";
+
+interface Props {
+  categories?: MenuCategory[];
+}
+
+const { categories = [] } = Astro.props;
+const sorted = [...categories].sort((a, b) => a.order - b.order);
+const FALLBACK_IMAGE = "/fallback/menu-placeholder.svg";
+---
+<section id="menu" class="menu-section" aria-labelledby="menu-heading">
+  <div class="container">
+    <h2 id="menu-heading" class="section-title">MENÚ</h2>
+    <p class="section-intro">Explorá nuestras categorías. Cada plato cuenta una historia. Páginas en formato A4.</p>
+    {sorted.length > 0 ? (
+      <div class="menu-grid">
+        {sorted.map((cat) => (
+          <div class="menu-category" data-category={cat.id}>
+            <h3 class="category-title">{cat.title}</h3>
+            <ul class="menu-items">
+              {cat.items.map((item) => {
+                const image = normalizeMenuItemImage(item);
+                return (
+                  <li class="menu-item">
+                    <div class="menu-card">
+                      <div class="menu-a4-wrapper">
+                        <img
+                          src={image.url}
+                          alt={item.alt}
+                          loading="lazy"
+                          width="248"
+                          height="351"
+                          class="menu-a4-img"
+                          onerror={`this.onerror=null;this.src='${FALLBACK_IMAGE}'`}
+                        />
+                      </div>
+                      <p class="menu-card-label">{item.title}</p>
+                      <a href={image.url} target="_blank" rel="noopener noreferrer" class="menu-card-cta">Abrir página completa</a>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="menu-placeholder">El menú se cargará desde el índice. Agregá categorías en <code>content/menu-index.json</code>.</p>
+    )}
+  </div>
+</section>
+
+<style>
+  .menu-section {
+    background: var(--color-bg);
+  }
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    margin-bottom: var(--space-2);
+  }
+  .section-intro {
+    color: var(--color-muted);
+    margin-bottom: var(--space-8);
+  }
+  .menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+  .menu-category {
+    background: var(--color-surface);
+    padding: var(--space-6);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+  }
+  .category-title {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+  }
+  .menu-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-6);
+  }
+  .menu-card-cta {
+    padding: var(--space-3) var(--space-4);
+    min-height: var(--touch-target-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9375rem;
+  }
+  .menu-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .menu-a4-wrapper {
+    aspect-ratio: var(--aspect-a4);
+    background: var(--color-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+  .menu-a4-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+  .menu-card-label {
+    padding: var(--space-3);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+  .menu-card-cta {
+    color: var(--color-accent);
+    text-align: center;
+  }
+  .menu-card-cta:hover {
+    text-decoration: none;
+    background: rgba(200, 169, 106, 0.1);
+  }
+  @media (max-width: 640px) {
+    .menu-items {
+      grid-template-columns: 1fr;
+    }
+    .menu-category {
+      padding: var(--space-4);
+    }
+  }
+  .menu-placeholder {
+    color: var(--color-muted);
+    font-style: italic;
+  }
+</style>

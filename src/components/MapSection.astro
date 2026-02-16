@@ -1,0 +1,60 @@
+---
+interface Props {
+  title?: string;
+  embedUrl?: string;
+  fallbackLink?: string;
+}
+const { title = "CÓMO LLEGAR", embedUrl = "", fallbackLink = "https://www.google.com/maps" } = Astro.props;
+---
+<section id="mapa" class="map-section" aria-labelledby="mapa-heading">
+  <div class="container">
+    <h2 id="mapa-heading" class="section-title">{title}</h2>
+    {embedUrl ? (
+      <div class="map-wrapper">
+        <iframe
+          src={embedUrl}
+          width="100%"
+          height="400"
+          class="map-iframe"
+          style="border:0;"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Ubicación de Don Franco en el mapa"
+        />
+      </div>
+    ) : (
+      <p class="map-fallback">
+        <a href={fallbackLink} target="_blank" rel="noopener noreferrer">Ver ubicación en Google Maps</a>
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .map-section {
+    background: var(--color-surface);
+  }
+  .section-title {
+    font-family: var(--font-title);
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    margin-bottom: var(--space-6);
+  }
+  .map-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
+  .map-iframe {
+    display: block;
+    height: clamp(250px, 50vw, 400px);
+  }
+  .map-fallback {
+    color: var(--color-muted);
+  }
+  .map-fallback a {
+    color: var(--color-accent);
+  }
+</style>
