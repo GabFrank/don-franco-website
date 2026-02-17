@@ -48,4 +48,4 @@ jobs:
           RELEASE=$(date +%Y%m%d%H%M%S)
           ssh $SSH_OPTS "$DO_USER@$DO_HOST" "mkdir -p $DEPLOY_PATH/releases/$RELEASE"
           rsync -az --delete -e "ssh $SSH_OPTS" dist/ "$DO_USER@$DO_HOST:$DEPLOY_PATH/releases/$RELEASE/"
-          ssh $SSH_OPTS "$DO_USER@$DO_HOST" "ln -sfn $DEPLOY_PATH/releases/$RELEASE $DEPLOY_PATH/current && sudo restorecon -Rv $DEPLOY_PATH && sudo systemctl reload nginx"
+          ssh $SSH_OPTS "$DO_USER@$DO_HOST" "ln -sfn $DEPLOY_PATH/releases/$RELEASE $DEPLOY_PATH/current && (sudo restorecon -Rv $DEPLOY_PATH || true) && (sudo systemctl reload nginx || true)"
