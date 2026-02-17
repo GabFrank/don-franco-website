@@ -27,13 +27,25 @@ try {
 }
 
 const hero = (siteConfig.hero ?? {}) as Record<string, unknown>;
+const heroCarouselFolder =
+  (typeof hero.carouselFolderUrl === "string" && hero.carouselFolderUrl.trim() !== "" ? hero.carouselFolderUrl : undefined) ??
+  (typeof hero.carouselFolderId === "string" && hero.carouselFolderId.trim() !== "" ? hero.carouselFolderId : undefined);
+const heroCarouselLimit = typeof hero.carouselLimit === "number" ? hero.carouselLimit : 10;
+const driveApiKey = (import.meta.env.GDRIVE_API_KEY as string | undefined) ?? (import.meta.env.GOOGLE_DRIVE_API_KEY as string | undefined);
+const heroCarouselImages = await fetchDriveFolderImages({
+  apiKey: driveApiKey,
+  folder: heroCarouselFolder,
+  limit: heroCarouselLimit,
+});
+const heroBackgroundFromFolder = heroCarouselImages.map((img) => img.url);
 const heroBackgroundRaw = hero.backgroundImages;
-const heroBackgroundImages: string[] = Array.isArray(heroBackgroundRaw)
+const heroBackgroundFromConfig: string[] = Array.isArray(heroBackgroundRaw)
   ? heroBackgroundRaw
       .filter((u): u is string => typeof u === "string")
       .map((url) => getMenuPageImageUrl({ url }) || url)
       .filter((src) => src !== "")
   : [];
+const heroBackgroundImages = heroBackgroundFromFolder.length > 0 ? heroBackgroundFromFolder : heroBackgroundFromConfig;
 
 const story = (siteConfig.story ?? {}) as Record<string, unknown>;
 const galleryStatic = (siteConfig.gallery ?? {}) as Record<string, unknown>;
@@ -46,7 +58,6 @@ const driveFolderRef =
   (typeof galleryStatic.folderUrl === "string" && galleryStatic.folderUrl.trim() !== "" ? galleryStatic.folderUrl : undefined) ??
   (typeof galleryStatic.folderId === "string" && galleryStatic.folderId.trim() !== "" ? galleryStatic.folderId : undefined);
 const driveLimit = typeof galleryStatic.limit === "number" ? galleryStatic.limit : 12;
-const driveApiKey = (import.meta.env.GDRIVE_API_KEY as string | undefined) ?? (import.meta.env.GOOGLE_DRIVE_API_KEY as string | undefined);
 const driveGalleryImages = await fetchDriveFolderImages({
   apiKey: driveApiKey,
   folder: driveFolderRef,

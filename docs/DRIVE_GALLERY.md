@@ -38,9 +38,9 @@ Crear secret:
 
 Ruta: **Repo → Settings → Secrets and variables → Actions → New repository secret**.
 
-### 2) Configurar la carpeta en `content/site.json`
+### 2) Configurar carpetas en `content/site.json`
 
-En `gallery`:
+**Galería** (sección de fotos):
 
 ```json
 "gallery": {
@@ -57,6 +57,19 @@ También se acepta `folderId` (sin URL completa):
 ```json
 "folderId": "TU_FOLDER_ID"
 ```
+
+**Carousel del Hero** (fondo del banner principal): en `hero` podés usar una carpeta de Drive para las imágenes del carousel en lugar de listar `backgroundImages` a mano:
+
+```json
+"hero": {
+  "title": "DON FRANCO",
+  "carouselFolderUrl": "https://drive.google.com/drive/folders/ID_DE_LA_CARPETA",
+  "carouselLimit": 10,
+  "backgroundImageDuration": 5
+}
+```
+
+Si `carouselFolderUrl` está definido y hay `GDRIVE_API_KEY`, las imágenes del carousel se cargan automáticamente desde esa carpeta (ordenadas por fecha). Si no, se usan las URLs de `backgroundImages`.
 
 ## Actualización automática
 

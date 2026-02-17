@@ -7,6 +7,8 @@
     "tagline": "RESTAURANTE ARTESANAL",
     "description": "Cocina de autor en un ambiente único. Conocé nuestro menú y reservá tu mesa.",
     "ctaText": "VER MENÚ",
+    "carouselFolderUrl": "https://drive.google.com/drive/folders/1HenAdd-BOySFjUfUZ3V1MaN0SCeWSH6C",
+    "carouselLimit": 10,
     "backgroundImages": [
       "https://drive.google.com/file/d/1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS/view?usp=drive_link",
       "https://drive.google.com/file/d/1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL/view?usp=drive_link"
