@@ -26,8 +26,9 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null || (echo "SSH key invalid or malformed (check newlines/passphrase)" && exit 1)
           echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
       - name: Upload release
@@ -38,7 +39,8 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           PORT="${DO_PORT:-22}"
+          SSH_OPTS="-o StrictHostKeyChecking=yes -o BatchMode=yes -i ~/.ssh/deploy_key -p $PORT"
           RELEASE=$(date +%Y%m%d%H%M%S)
-          ssh -o StrictHostKeyChecking=yes -p "$PORT" "$DO_USER@$DO_HOST" "mkdir -p $DEPLOY_PATH/releases/$RELEASE"
-          rsync -az --delete -e "ssh -o StrictHostKeyChecking=yes -p $PORT" dist/ "$DO_USER@$DO_HOST:$DEPLOY_PATH/releases/$RELEASE/"
-          ssh -o StrictHostKeyChecking=yes -p "$PORT" "$DO_USER@$DO_HOST" "ln -sfn $DEPLOY_PATH/releases/$RELEASE $DEPLOY_PATH/current && sudo systemctl reload nginx"
+          ssh $SSH_OPTS "$DO_USER@$DO_HOST" "mkdir -p $DEPLOY_PATH/releases/$RELEASE"
+          rsync -az --delete -e "ssh $SSH_OPTS" dist/ "$DO_USER@$DO_HOST:$DEPLOY_PATH/releases/$RELEASE/"
+          ssh $SSH_OPTS "$DO_USER@$DO_HOST" "ln -sfn $DEPLOY_PATH/releases/$RELEASE $DEPLOY_PATH/current && sudo systemctl reload nginx"
