@@ -35,6 +35,8 @@ export function normalizeMenuItemImage(item: { image: { fileId: string; url?: st
 }
 
 const DRIVE_FILE_LINK = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+const DRIVE_FOLDER_LINK = /drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]+)/;
+const DRIVE_OPEN_QUERY_ID = /[?&]id=([a-zA-Z0-9_-]+)/;
 
 /**
  * Resolve image URL for a menu page: accepts either fileId or full URL (Drive share link or direct image URL).
@@ -48,4 +50,75 @@ export function getMenuPageImageUrl(page: { fileId?: string; url?: string }): st
   }
   if (page.fileId?.trim()) return buildDriveViewUrl(page.fileId.trim());
   return "";
+}
+
+/**
+ * Get folder id from either direct folder id or a Google Drive folder URL.
+ */
+export function getDriveFolderId(input?: string): string {
+  const raw = input?.trim() ?? "";
+  if (!raw) return "";
+  if (!raw.includes("http")) return raw;
+  const folderMatch = raw.match(DRIVE_FOLDER_LINK);
+  if (folderMatch?.[1]) return folderMatch[1];
+  const queryMatch = raw.match(DRIVE_OPEN_QUERY_ID);
+  if (queryMatch?.[1]) return queryMatch[1];
+  return "";
+}
+
+export interface DriveFolderImage {
+  url: string;
+  alt: string;
+  link?: string;
+}
+
+interface FetchDriveFolderImagesParams {
+  apiKey?: string;
+  folder?: string;
+  limit?: number;
+}
+
+function normalizeAltFromName(name: string): string {
+  const withoutExt = name.replace(/\.[a-zA-Z0-9]+$/, "");
+  return withoutExt.trim() || "Imagen de galería";
+}
+
+/**
+ * Fetch latest images from a public Drive folder using Drive API v3.
+ * Returns [] when params are missing or request fails.
+ */
+export async function fetchDriveFolderImages({
+  apiKey,
+  folder,
+  limit = 12,
+}: FetchDriveFolderImagesParams): Promise<DriveFolderImage[]> {
+  const key = apiKey?.trim();
+  const folderId = getDriveFolderId(folder);
+  if (!key || !folderId) return [];
+
+  try {
+    const q = `'${folderId}' in parents and trashed=false and mimeType contains 'image/'`;
+    const params = new URLSearchParams({
+      key,
+      q,
+      fields: "files(id,name,webViewLink,createdTime)",
+      orderBy: "createdTime desc",
+      pageSize: String(Math.max(1, Math.min(limit, 100))),
+      includeItemsFromAllDrives: "true",
+      supportsAllDrives: "true",
+    });
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files?${params.toString()}`);
+    if (!res.ok) return [];
+    const json = (await res.json()) as {
+      files?: Array<{ id: string; name: string; webViewLink?: string; createdTime?: string }>;
+    };
+    const files = json.files ?? [];
+    return files.map((file) => ({
+      url: buildDriveViewUrl(file.id),
+      alt: normalizeAltFromName(file.name),
+      link: file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`,
+    }));
+  } catch {
+    return [];
+  }
 }

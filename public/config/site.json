@@ -23,7 +23,9 @@
   "gallery": {
     "title": "GALERÍA",
     "intro": "Un vistazo a nuestro espacio y platos.",
-    "emptyMessage": "Las fotos de la galería se configuran desde el contenido (Drive o JSON)."
+    "emptyMessage": "Las fotos de la galería se configuran desde una carpeta de Drive.",
+    "folderUrl": "",
+    "limit": 12
   },
   "reviews": {
     "title": "LO QUE DICEN NUESTROS CLIENTES",

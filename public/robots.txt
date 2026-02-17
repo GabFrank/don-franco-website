@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://donfranco.com/sitemap.xml
+Sitemap: https://donfrancorestaurante.com/sitemap.xml

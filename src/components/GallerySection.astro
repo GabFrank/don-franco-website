@@ -1,8 +1,9 @@
 ---
-// Gallery: optional list of { url, alt } from Drive or local
+// Gallery: optional list of { url, alt, link? } from Drive folder or JSON
 interface GalleryImage {
   url: string;
   alt: string;
+  link?: string;
 }
 interface Props {
   title?: string;
@@ -10,7 +11,7 @@ interface Props {
   emptyMessage?: string;
   images?: GalleryImage[];
 }
-const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", emptyMessage = "Las fotos de la galería se configuran desde el contenido (Drive o JSON).", images = [] } = Astro.props;
+const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", emptyMessage = "Las fotos de la galería se configuran desde Drive o el contenido (JSON).", images = [] } = Astro.props;
 ---
 <section id="galeria" class="gallery-section" aria-labelledby="galeria-heading">
   <div class="container">
@@ -20,7 +21,13 @@ const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", em
       <ul class="gallery-grid">
         {images.map((img) => (
           <li>
-            <img src={img.url} alt={img.alt} loading="lazy" class="gallery-img" />
+            {img.link ? (
+              <a href={img.link} target="_blank" rel="noopener noreferrer" class="gallery-link" aria-label={`Ver imagen: ${img.alt}`}>
+                <img src={img.url} alt={img.alt} loading="lazy" class="gallery-img" />
+              </a>
+            ) : (
+              <img src={img.url} alt={img.alt} loading="lazy" class="gallery-img" />
+            )}
           </li>
         ))}
       </ul>
@@ -53,6 +60,12 @@ const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", em
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: var(--space-4);
   }
+  .gallery-link {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+  }
   .gallery-img,
   .gallery-grid img {
     width: 100%;
@@ -60,6 +73,9 @@ const { title = "GALERÍA", intro = "Un vistazo a nuestro espacio y platos.", em
     object-fit: cover;
     border-radius: 8px;
     border: 1px solid var(--color-border);
+  }
+  .gallery-link .gallery-img {
+    border: none;
   }
   @media (max-width: 640px) {
     .gallery-grid {

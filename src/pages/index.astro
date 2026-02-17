@@ -9,7 +9,7 @@ import ReviewsSection from "../components/ReviewsSection.astro";
 import ContactSection from "../components/ContactSection.astro";
 import MapSection from "../components/MapSection.astro";
 import Footer from "../components/Footer.astro";
-import { getMenuPageImageUrl } from "../lib/drive";
+import { fetchDriveFolderImages, getMenuPageImageUrl } from "../lib/drive";
 
 let menuPages: Array<{ fileId?: string; url?: string; alt: string }> = [];
 let siteConfig: Record<string, unknown> = {};
@@ -36,7 +36,24 @@ const heroBackgroundImages: string[] = Array.isArray(heroBackgroundRaw)
   : [];
 
 const story = (siteConfig.story ?? {}) as Record<string, unknown>;
-const gallery = (siteConfig.gallery ?? {}) as Record<string, string>;
+const galleryStatic = (siteConfig.gallery ?? {}) as Record<string, unknown>;
+const gallery = galleryStatic as Record<string, string>;
+const galleryImagesFromConfig = Array.isArray(galleryStatic.images)
+  ? (galleryStatic.images as Array<{ url: string; alt: string; link?: string }>)
+  : [];
+
+const driveFolderRef =
+  (typeof galleryStatic.folderUrl === "string" && galleryStatic.folderUrl.trim() !== "" ? galleryStatic.folderUrl : undefined) ??
+  (typeof galleryStatic.folderId === "string" && galleryStatic.folderId.trim() !== "" ? galleryStatic.folderId : undefined);
+const driveLimit = typeof galleryStatic.limit === "number" ? galleryStatic.limit : 12;
+const driveApiKey = (import.meta.env.GDRIVE_API_KEY as string | undefined) ?? (import.meta.env.GOOGLE_DRIVE_API_KEY as string | undefined);
+const driveGalleryImages = await fetchDriveFolderImages({
+  apiKey: driveApiKey,
+  folder: driveFolderRef,
+  limit: driveLimit,
+});
+const galleryImages = driveGalleryImages.length > 0 ? driveGalleryImages : galleryImagesFromConfig;
+
 const reviews = (siteConfig.reviews ?? {}) as Record<string, unknown>;
 const contact = (siteConfig.contact ?? {}) as Record<string, string>;
 const mapConfig = (siteConfig.map ?? {}) as Record<string, string>;
@@ -51,7 +68,7 @@ const metaDescription = (siteConfig.metaDescription as string) ?? "Parrilla arte
     <Hero title={hero.title as string} tagline={hero.tagline as string} description={hero.description as string} ctaText={hero.ctaText as string} backgroundImages={heroBackgroundImages} backgroundImageDuration={typeof hero.backgroundImageDuration === "number" ? hero.backgroundImageDuration : 5} />
     <MenuFullscreen pages={menuPages} />
     <StorySection title={story.title as string} paragraphs={story.paragraphs as string[]} />
-    <GallerySection title={gallery.title} intro={gallery.intro} emptyMessage={gallery.emptyMessage} />
+    <GallerySection title={gallery.title} intro={gallery.intro} emptyMessage={gallery.emptyMessage} images={galleryImages} />
     <ReviewsSection title={reviews.title as string} rating={reviews.rating as number} reviewCount={reviews.reviewCount as number} linkText={reviews.linkText as string} mapsUrl={reviews.mapsUrl as string} />
     <ContactSection title={contact.title} reservasLabel={contact.reservasLabel} reservarCta={contact.reservarCta} phoneLabel={contact.phoneLabel} phone={contact.phone} whatsapp={contact.whatsapp} addressLabel={contact.addressLabel} address={contact.address} hoursLabel={contact.hoursLabel} hours={contact.hours} />
     <MapSection title={mapConfig.title} embedUrl={mapConfig.embedUrl} fallbackLink={mapConfig.fallbackLink} />

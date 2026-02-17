@@ -29,7 +29,12 @@
 
 ## Actualizar galería
 
-- Si la galería se alimenta por JSON (por ejemplo en un futuro `content/gallery-index.json`), el flujo es el mismo: subir fotos a Drive, copiar IDs, editar el JSON, PR y merge a `main`.
+- La galería puede alimentarse automáticamente desde una carpeta de Drive, sin links individuales por imagen.
+- Configurar en `content/site.json`:
+  - `gallery.folderUrl` (o `gallery.folderId`)
+  - `gallery.limit`
+- Requiere secret `GDRIVE_API_KEY` en GitHub Actions.
+- Ver guía completa: [DRIVE_GALLERY.md](./DRIVE_GALLERY.md).
 
 ## Checklist pre-deploy (antes de merge a main)
 

@@ -3,6 +3,9 @@ name: Deploy Don Franco
 on:
   push:
     branches: [main]
+  # Actualiza la galería desde Drive cada hora (build + deploy)
+  schedule:
+    - cron: "0 * * * *"
 
 jobs:
   deploy:
@@ -21,6 +24,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          GDRIVE_API_KEY: ${{ secrets.GDRIVE_API_KEY }}
         run: npm run build
 
       - name: Setup SSH
