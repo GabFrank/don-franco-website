@@ -26,6 +26,7 @@ jobs:
       - name: Build
         env:
           GDRIVE_API_KEY: ${{ secrets.GDRIVE_API_KEY }}
+          PLACES_API_KEY: ${{ secrets.PLACES_API_KEY }}
         run: npm run build
 
       - name: Setup SSH

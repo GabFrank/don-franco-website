@@ -9,7 +9,9 @@ import ReviewsSection from "../components/ReviewsSection.astro";
 import ContactSection from "../components/ContactSection.astro";
 import MapSection from "../components/MapSection.astro";
 import Footer from "../components/Footer.astro";
+import WhatsAppFloat from "../components/WhatsAppFloat.astro";
 import { fetchDriveFolderImages, getMenuPageImageUrl } from "../lib/drive";
+import { fetchPlaceRating } from "../lib/places";
 
 let menuPages: Array<{ fileId?: string; url?: string; alt: string }> = [];
 let siteConfig: Record<string, unknown> = {};
@@ -65,7 +67,15 @@ const driveGalleryImages = await fetchDriveFolderImages({
 });
 const galleryImages = driveGalleryImages.length > 0 ? driveGalleryImages : galleryImagesFromConfig;
 
-const reviews = (siteConfig.reviews ?? {}) as Record<string, unknown>;
+const reviewsStatic = (siteConfig.reviews ?? {}) as Record<string, unknown>;
+const reviewsPlaceId = typeof reviewsStatic.placeId === "string" && reviewsStatic.placeId.trim() !== "" ? reviewsStatic.placeId.trim() : undefined;
+const placesApiKey = (import.meta.env.PLACES_API_KEY as string | undefined) ?? (import.meta.env.GOOGLE_PLACES_API_KEY as string | undefined);
+const placeRating = await fetchPlaceRating(placesApiKey, reviewsPlaceId);
+const reviews = {
+  ...reviewsStatic,
+  rating: typeof placeRating.rating === "number" ? placeRating.rating : (reviewsStatic.rating as number) ?? 4.8,
+  reviewCount: typeof placeRating.user_ratings_total === "number" ? placeRating.user_ratings_total : (reviewsStatic.reviewCount as number) ?? 120,
+} as Record<string, unknown>;
 const contact = (siteConfig.contact ?? {}) as Record<string, string>;
 const mapConfig = (siteConfig.map ?? {}) as Record<string, string>;
 const footer = (siteConfig.footer ?? {}) as Record<string, string>;
@@ -84,5 +94,6 @@ const metaDescription = (siteConfig.metaDescription as string) ?? "Parrilla arte
     <ContactSection title={contact.title} reservasLabel={contact.reservasLabel} reservarCta={contact.reservarCta} phoneLabel={contact.phoneLabel} phone={contact.phone} whatsapp={contact.whatsapp} addressLabel={contact.addressLabel} address={contact.address} hoursLabel={contact.hoursLabel} hours={contact.hours} />
     <MapSection title={mapConfig.title} embedUrl={mapConfig.embedUrl} fallbackLink={mapConfig.fallbackLink} />
     <Footer siteName={siteName} tagline={footer.tagline} mapsUrl={footer.mapsUrl} instagramUrl={footer.instagramUrl} facebookUrl={footer.facebookUrl} legalText={footer.legalText} />
+    <WhatsAppFloat whatsappNumber={contact.whatsapp ?? ""} label="Chatear por WhatsApp con Don Franco" />
   </main>
 </BaseLayout>

@@ -98,6 +98,7 @@ Configurar en el repo: Settings → Secrets and variables → Actions:
 - `KNOWN_HOSTS`: salida de `ssh-keyscan -p PORT HOST` para evitar preguntas de host key.
 - `DEPLOY_PATH`: ruta absoluta (ej. `/var/www/donfranco`).
 - `GDRIVE_API_KEY`: (opcional) API key de Google Drive para listar automáticamente imágenes de una carpeta pública de galería. Ver [docs/DRIVE_GALLERY.md](../../docs/DRIVE_GALLERY.md).
+- `PLACES_API_KEY`: (opcional) API key con Places API habilitada para mostrar calificación y valoraciones de Google Maps. Ver [docs/GOOGLE_MAPS_REVIEWS.md](../../docs/GOOGLE_MAPS_REVIEWS.md).
 
 El workflow se ejecuta en cada **push a `main`** y además **cada hora** (cron en UTC), para que la galería desde Drive se actualice automáticamente sin hacer push.
 
