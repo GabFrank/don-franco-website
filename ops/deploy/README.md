@@ -1,10 +1,10 @@
-# Deploy Don Franco - DigitalOcean Droplet
+# Deploy Don Franco - DigitalOcean Droplet (Fedora)
 
 ## Prerequisitos en el servidor
 
-- Ubuntu LTS.
+- Fedora (Droplet con imagen Fedora).
 - Nginx instalado.
-- Usuario de deploy (ej. `deploy`) con acceso SSH por llave.
+- Usuario de deploy: `franco` (contraseña: `franco`), con acceso SSH por llave para el workflow.
 - Directorio de la app: `/var/www/donfranco` (o el valor de `DEPLOY_PATH`).
 
 ## Estructura en el servidor
@@ -23,32 +23,79 @@
 
 ## Configuración inicial (una vez)
 
-1. Crear directorio y permisos:
-   ```bash
-   sudo mkdir -p /var/www/donfranco/releases
-   sudo chown -R deploy:deploy /var/www/donfranco
-   ```
+En los pasos siguientes, los archivos de configuración se pueden crear con **`tee`** (heredoc o pipe desde la terminal) o con **`vim`** (editar y pegar contenido); en cada paso se indican ambas opciones.
 
-2. Nginx: copiar `ops/nginx/donfranco.conf` a `/etc/nginx/sites-available/donfranco`, ajustar `server_name` y `root`, habilitar sitio y recargar:
+1. Crear usuario `franco` (si no existe) y directorio con permisos:
    ```bash
-   sudo ln -s /etc/nginx/sites-available/donfranco /etc/nginx/sites-enabled/
+   sudo useradd -m -s /bin/bash franco
+   echo 'franco:franco' | sudo chpasswd
+   sudo mkdir -p /var/www/donfranco/releases
+   sudo chown -R franco:franco /var/www/donfranco
+   ```
+   Añadir la llave pública SSH de deploy a `~franco/.ssh/authorized_keys` para que GitHub Actions pueda conectar.
+
+2. Nginx (Fedora usa `conf.d`): crear `/etc/nginx/conf.d/donfranco.conf` con el contenido de `ops/nginx/donfranco.conf` del repo. Ajustar `server_name` y `root` según tu dominio y ruta.
+
+   **Con vim:** crear el archivo y pegar el contenido.
+   ```bash
+   sudo vim /etc/nginx/conf.d/donfranco.conf
+   ```
+   (Pegar el contenido de `ops/nginx/donfranco.conf`, guardar con `:wq`.)
+
+   **Con tee y heredoc:** pegar el bloque completo (incluido el EOF final) en la terminal.
+   ```bash
+   sudo tee /etc/nginx/conf.d/donfranco.conf << 'EOF'
+   server {
+       listen 80;
+       server_name donfrancorestaurante.com www.donfrancorestaurante.com;
+       root /var/www/donfranco/current;
+       index index.html;
+       location / { try_files $uri $uri/ /index.html; }
+       location ~* \.(js|css|png|jpg|jpeg|gif|svg|webp|woff2|ico)$ {
+           expires 30d; add_header Cache-Control "public, immutable";
+       }
+       add_header X-Frame-Options "SAMEORIGIN" always;
+       add_header X-Content-Type-Options "nosniff" always;
+       add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+   }
+   EOF
+   ```
+   Dominio: `donfrancorestaurante.com` (ya configurado).
+
+   Luego probar y recargar:
+   ```bash
    sudo nginx -t && sudo systemctl reload nginx
    ```
 
-3. SSL (recomendado): `sudo certbot --nginx -d donfranco.com -d www.donfranco.com` y luego actualizar la config de Nginx con el bloque HTTPS (ver comentarios en `donfranco.conf`).
-
-4. Sudo para reload nginx sin contraseña (opcional, para el usuario de deploy):
+3. SSL (recomendado): instalar Certbot y obtener certificado:
    ```bash
-   echo 'deploy ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx' | sudo tee /etc/sudoers.d/deploy-reload
-   sudo chmod 440 /etc/sudoers.d/deploy-reload
+   sudo dnf install -y certbot python3-certbot-nginx
+   sudo certbot --nginx -d donfrancorestaurante.com -d www.donfrancorestaurante.com
    ```
+   Luego actualizar la config de Nginx con el bloque HTTPS (ver comentarios en `donfranco.conf`) y recargar.
+
+4. Instalación de Nginx (si no está): `sudo dnf install -y nginx` y habilitar: `sudo systemctl enable --now nginx`. Abrir firewall: `sudo firewall-cmd --permanent --add-service={http,https}` y `sudo firewall-cmd --reload`. Con SELinux activo, el contenido en `/var/www/` suele tener el contexto correcto; si Nginx no sirve los archivos, revisar con `ls -Z` y `restorecon -Rv /var/www/donfranco` si hace falta.
+
+5. Sudo para reload nginx sin contraseña (para el usuario `franco`).
+
+   **Con tee:**
+   ```bash
+   echo 'franco ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx' | sudo tee /etc/sudoers.d/franco-reload
+   sudo chmod 440 /etc/sudoers.d/franco-reload
+   ```
+
+   **Con vim:** crear el archivo y escribir la línea.
+   ```bash
+   sudo vim /etc/sudoers.d/franco-reload
+   ```
+   Contenido: `franco ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx`. Guardar y salir (`:wq`). Luego `sudo chmod 440 /etc/sudoers.d/franco-reload`.
 
 ## Secrets en GitHub
 
 Configurar en el repo: Settings → Secrets and variables → Actions:
 
 - `DO_HOST`: IP o hostname del Droplet.
-- `DO_USER`: usuario SSH (ej. `deploy`).
+- `DO_USER`: usuario SSH → `franco`.
 - `DO_PORT`: puerto SSH (opcional; si no se define, el workflow usa 22).
 - `SSH_PRIVATE_KEY`: contenido de la clave privada (ej. `id_ed25519`).
 - `KNOWN_HOSTS`: salida de `ssh-keyscan -p PORT HOST` para evitar preguntas de host key.
