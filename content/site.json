@@ -1,11 +1,11 @@
 {
   "siteName": "Don Franco",
-  "tagline": "PARRILLA ARTESANAL",
-  "metaDescription": "Parrilla artesanal. Menú, historia, contacto y reservas.",
+  "tagline": "RESTAURANTE ARTESANAL",
+  "metaDescription": "Restaurante especializado en hamburguesas y cervezas artesanales.",
   "hero": {
     "title": "DON FRANCO",
     "tagline": "RESTAURANTE ARTESANAL",
-    "description": "Cocina de autor en un ambiente único. Conocé nuestro menú y reservá tu mesa.",
+    "description": "Una buena cerveza siempre esta acompañada de una buena hamburguesa, un jugoso steak o una deliciosa pizza. ",
     "ctaText": "VER MENÚ",
     "backgroundImages": [
       "https://drive.google.com/file/d/1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS/view?usp=drive_link",
@@ -16,8 +16,13 @@
   "story": {
     "title": "NUESTRA HISTORIA",
     "paragraphs": [
-      "Don Franco nace del amor por la parrilla y la cocina artesanal. Cada corte, cada plato y cada momento en nuestra mesa está pensado para que vivas una experiencia única.",
-      "Trabajamos con materias primas de primera calidad y técnicas tradicionales para ofrecerte el mejor sabor en un ambiente cálido y familiar."
+      "Don Franco nace de nuestra pasión por lo artesanal.",
+
+"Todo comenzó en 2018, cuando inauguramos en Salto del Guairá la primera fábrica de cerveza artesanal de la región. Lo que empezó como curiosidad se transformó en oficio: aprender, experimentar y crear productos hechos con tiempo, dedicación y personalidad.",
+
+"En ese camino descubrimos que una buena cerveza siempre encuentra su mejor compañía en una gran comida. Así, en 2020 decidimos dar el siguiente paso y abrir Don Franco Restaurante.",
+
+"Hoy combinamos esa misma filosofía artesanal en la cocina: hamburguesas autorales, cortes premium, porciones generosas, pizzas y sabores pensados para disfrutarse sin apuro."
     ]
   },
   "gallery": {
@@ -30,30 +35,30 @@
     "rating": 4.8,
     "reviewCount": 120,
     "linkText": "Ver en Google Maps",
-    "mapsUrl": "https://www.google.com/maps"
+    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
   },
   "contact": {
     "title": "CONTACTO",
     "reservasLabel": "Reservas (WhatsApp)",
     "reservarCta": "RESERVAR",
     "phoneLabel": "Teléfono",
-    "phone": "+54 11 1234-5678",
-    "whatsapp": "5491112345678",
+    "phone": "+595983327600",
+    "whatsapp": "59598327600",
     "addressLabel": "Dirección",
-    "address": "Av. Ejemplo 1234, CABA",
+    "address": "Av. Paraguay c/ 30 de julio",
     "hoursLabel": "Horarios",
-    "hours": "Martes a Domingos 12:00 - 00:00"
+    "hours": "Lunes a Lunes 17:00 - 00:00"
   },
   "map": {
     "title": "CÓMO LLEGAR",
     "embedUrl": "",
-    "fallbackLink": "https://www.google.com/maps"
+    "fallbackLink": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
   },
   "footer": {
-    "tagline": "Parrilla Artesanal",
-    "mapsUrl": "https://www.google.com/maps",
-    "instagramUrl": "",
-    "facebookUrl": "",
+    "tagline": "Restaurante Artesanal",
+    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9",
+    "instagramUrl": "https://www.instagram.com/donfrancobs",
+    "facebookUrl": "https://www.facebook.com/donfrancobs",
     "legalText": "Todos los derechos reservados."
   }
 }

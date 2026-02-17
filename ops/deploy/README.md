@@ -76,19 +76,16 @@ En los pasos siguientes, los archivos de configuración se pueden crear con **`t
 
 4. Instalación de Nginx (si no está): `sudo dnf install -y nginx` y habilitar: `sudo systemctl enable --now nginx`. Abrir firewall: `sudo firewall-cmd --permanent --add-service={http,https}` y `sudo firewall-cmd --reload`. Con SELinux activo, el contenido en `/var/www/` suele tener el contexto correcto; si Nginx no sirve los archivos, revisar con `ls -Z` y `restorecon -Rv /var/www/donfranco` si hace falta.
 
-5. Sudo para reload nginx sin contraseña (para el usuario `franco`).
+5. Sudo para reload nginx y restorecon (para el usuario `franco`), así el workflow puede recargar Nginx y corregir contexto SELinux en cada deploy.
 
    **Con tee:**
    ```bash
    echo 'franco ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx' | sudo tee /etc/sudoers.d/franco-reload
-   sudo chmod 440 /etc/sudoers.d/franco-reload
+   echo 'franco ALL=(ALL) NOPASSWD: /usr/sbin/restorecon -Rv /var/www/donfranco' | sudo tee /etc/sudoers.d/franco-restorecon
+   sudo chmod 440 /etc/sudoers.d/franco-reload /etc/sudoers.d/franco-restorecon
    ```
 
-   **Con vim:** crear el archivo y escribir la línea.
-   ```bash
-   sudo vim /etc/sudoers.d/franco-reload
-   ```
-   Contenido: `franco ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx`. Guardar y salir (`:wq`). Luego `sudo chmod 440 /etc/sudoers.d/franco-reload`.
+   **Con vim:** crear `/etc/sudoers.d/franco-reload` con `franco ALL=(ALL) NOPASSWD: /bin/systemctl reload nginx` y `/etc/sudoers.d/franco-restorecon` con `franco ALL=(ALL) NOPASSWD: /usr/sbin/restorecon -Rv /var/www/donfranco`. Luego `sudo chmod 440` en ambos.
 
 ## Secrets en GitHub
 
