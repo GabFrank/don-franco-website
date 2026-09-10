@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects
+# Handle React Router for admin panel
+/admin/* /admin/index.html 200
