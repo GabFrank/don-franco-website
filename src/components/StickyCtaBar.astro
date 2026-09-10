@@ -37,12 +37,12 @@ const { whatsapp } = siteData.contact;
     background: var(--color-border);
     padding-bottom: env(safe-area-inset-bottom);
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(0);
+    transform: translateY(100%);
     transition: transform var(--transition-base);
   }
 
-  .sticky-cta-bar.hidden {
-    transform: translateY(100%);
+  .sticky-cta-bar.visible {
+    transform: translateY(0);
   }
 
   .sticky-cta-btn {
@@ -97,9 +97,9 @@ const { whatsapp } = siteData.contact;
     
     // Show only when scrolled past hero
     if (currentScrollY > heroHeight * 0.8) {
-      stickyBar?.classList.remove('hidden');
+      stickyBar?.classList.add('visible');
     } else {
-      stickyBar?.classList.add('hidden');
+      stickyBar?.classList.remove('visible');
     }
     
     lastScrollY = currentScrollY;

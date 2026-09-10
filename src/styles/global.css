@@ -17,6 +17,13 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow-x: hidden;
+  padding-bottom: 0;
+}
+
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -90,7 +97,8 @@ button {
   text-align: center;
   margin-bottom: var(--space-8);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.03em;
+  font-weight: 600;
 }
 
 @media (min-width: 768px) {

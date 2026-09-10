@@ -46,7 +46,14 @@
     "emptyMessage": "Próximamente agregaremos más fotos de nuestro restaurante.",
     "fallbackImages": [
       "1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS",
-      "1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL"
+      "1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL",
+      "1Aea-cwx1nz5k0qhProcCUTHgtqPxWD7p",
+      "10jHeyfqqlUOZdrLLOChRqXnTJrxSur9I",
+      "1dDXbp8L3ySSvdJbWN9AqVlbJLAZ9i8Fv",
+      "1v2oINjXbRdq0gA5I77osMx1AfrfwXjuz",
+      "1PsCVfMR2EvUkU-9uM6S8hI5BzPkQpcAo",
+      "1zN1M9R4-Vs704wmrUnvz69C42J4byTdA",
+      "1CGe3p0ySs-5RWfVE5dSdt5ka7aaS7WFW"
     ],
     "folderUrl": "https://drive.google.com/drive/folders/1ZuJnBxiOMcAY5LirsBKXkksJueygO3fL",
     "limit": 12
@@ -73,7 +80,7 @@
   },
   "map": {
     "title": "CÓMO LLEGAR",
-    "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.5!2d-54.3!3d-24.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDAzJzAwLjAiUyA1NMKwMTgnMDAuMCJX!5e0!3m2!1sen!2spy!4v1234567890",
+    "embedUrl": "https://www.google.com/maps?q=Don+Franco+Salto+del+Guair%C3%A1&output=embed",
     "fallbackLink": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
   },
   "footer": {

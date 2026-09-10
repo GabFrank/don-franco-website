@@ -1,0 +1,107 @@
+---
+import menuDigitalData from '../content/menu-digital.json';
+
+// Find beer category and get first 3 items
+const bebidasCategory = menuDigitalData.categories.find((cat: any) => cat.id === 'bebidas');
+const cervezas = bebidasCategory?.items.filter((item: any) => 
+  item.name.toLowerCase().includes('cerveza artesanal')
+).slice(0, 3) || [];
+---
+
+{cervezas.length > 0 && (
+  <section class="beer-strip">
+    <div class="container">
+      <div class="beer-strip-content">
+        <div class="beer-strip-header">
+          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 11h1a3 3 0 010 6h-1m-4-6v6m-4-6v6M5 11h11a2 2 0 012 2v6c0 1.1-.9 2-2 2H5a2 2 0 01-2-2v-6c0-1.1.9-2 2-2zM7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+          <h3 class="beer-strip-title">Cervezas de la Casa</h3>
+        </div>
+        
+        <div class="beer-items">
+          {cervezas.map((cerveza: any) => (
+            <div class="beer-item">
+              <span class="beer-name">{cerveza.name.replace('Cerveza Artesanal ', '')}</span>
+              <span class="beer-price">{cerveza.currency} {cerveza.price.toLocaleString('es-PY')}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .beer-strip {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-8) 0;
+  }
+
+  .beer-strip-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .beer-strip-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .beer-strip-header svg {
+    color: var(--color-accent-2);
+  }
+
+  .beer-strip-title {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .beer-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    justify-content: center;
+  }
+
+  .beer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .beer-name {
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .beer-price {
+    font-size: var(--text-sm);
+    color: var(--color-accent-2);
+    font-weight: 700;
+  }
+
+  @media (min-width: 768px) {
+    .beer-strip-content {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .beer-items {
+      gap: var(--space-8);
+    }
+  }
+</style>
