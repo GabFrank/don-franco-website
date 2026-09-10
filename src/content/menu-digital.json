@@ -8,21 +8,21 @@
         {
           "id": "classic",
           "name": "Don Franco Classic",
-          "description": "Medallon de carne 180g, queso cheddar, lechuga, tomate, cebolla caramelizada, salsa especial",
+          "description": "Medallón de carne 180g, queso cheddar, lechuga, tomate, cebolla caramelizada, salsa especial",
           "price": 45000,
           "currency": "Gs."
         },
         {
           "id": "bacon-bbq",
           "name": "Bacon BBQ",
-          "description": "Medallon de carne 180g, bacon crispy, queso cheddar, cebolla frita, salsa BBQ casera",
+          "description": "Medallón de carne 180g, bacon crispy, queso cheddar, cebolla frita, salsa BBQ casera",
           "price": 52000,
           "currency": "Gs."
         },
         {
           "id": "craft-burger",
           "name": "Craft Burger",
-          "description": "Doble medallon 360g, queso azul, rúcula, tomate seco, cebolla caramelizada, reducción balsámica",
+          "description": "Doble medallón 360g, queso azul, rúcula, tomate seco, cebolla caramelizada, reducción balsámica",
           "price": 68000,
           "currency": "Gs.",
           "badge": "Premium"
