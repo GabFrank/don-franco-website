@@ -10,7 +10,7 @@ const navLinks = [
 <header class="header">
   <div class="header-container">
     <a href="/" class="logo">
-      <img src="/logo.png" alt="Don Franco" width="120" height="133" />
+      <img src="/logo.png" alt="Don Franco" />
     </a>
     
     <nav class="nav desktop-only">
@@ -28,7 +28,7 @@ const navLinks = [
 
   <div class="mobile-menu" id="mobile-menu">
     <div class="mobile-menu-header">
-      <img src="/logo.png" alt="Don Franco" width="100" height="111" />
+      <img src="/logo.png" alt="Don Franco" />
       <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Cerrar menú">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M18 6L6 18M6 6l12 12"/>
@@ -182,8 +182,9 @@ const navLinks = [
   }
 
   .mobile-menu-header img {
-    max-width: 100px;
-    height: auto;
+    display: block;
+    height: 36px;
+    width: auto;
     object-fit: contain;
   }
 
