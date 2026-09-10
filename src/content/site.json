@@ -71,10 +71,8 @@
   },
   "contact": {
     "title": "CONTACTO",
-    "reservasLabel": "Reservas (WhatsApp)",
-    "reservarCta": "RESERVAR",
-    "phoneLabel": "Teléfono",
-    "phone": "+595 983 327 600",
+    "whatsappLabel": "WhatsApp",
+    "whatsappCta": "Escribinos",
     "whatsapp": "595983327600",
     "addressLabel": "Dirección",
     "address": "Av. Paraguay c/ 30 de julio, Salto del Guairá, Paraguay",

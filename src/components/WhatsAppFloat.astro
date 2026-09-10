@@ -17,22 +17,40 @@ const { whatsapp } = siteData.contact;
 </a>
 
 <style>
+<style>
   .whatsapp-float {
     position: fixed;
-    bottom: var(--space-6);
-    right: var(--space-6);
-    width: 64px;
-    height: 64px;
-    display: none !important;
-    align-items: center;
-    justify-content: center;
+    right: var(--space-4);
+    z-index: 999;
+    width: 56px;
+    height: 56px;
     background: #25D366;
     color: white;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     box-shadow: var(--shadow-xl);
-    z-index: var(--z-toast);
     transition: all var(--transition-base);
     animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Mobile: above sticky bar */
+  @media (max-width: 767px) {
+    .whatsapp-float {
+      bottom: calc(88px + env(safe-area-inset-bottom) + 12px);
+      width: 56px;
+      height: 56px;
+    }
+  }
+
+  /* Desktop: standard bottom-right */
+  @media (min-width: 768px) {
+    .whatsapp-float {
+      bottom: var(--space-8);
+      width: 64px;
+      height: 64px;
+    }
   }
 
   .whatsapp-float:hover {
@@ -46,16 +64,6 @@ const { whatsapp } = siteData.contact;
     }
     50% {
       box-shadow: var(--shadow-xl), 0 0 0 15px rgba(37, 211, 102, 0);
-    }
-  }
-
-  @media (min-width: 768px) {
-    .whatsapp-float {
-      display: flex !important;
-      width: 72px;
-      height: 72px;
-      bottom: var(--space-8);
-      right: var(--space-8);
     }
   }
 </style>

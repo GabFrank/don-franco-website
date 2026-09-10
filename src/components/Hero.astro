@@ -26,17 +26,7 @@ const heroImage = backgroundImages && backgroundImages[0]
       <p class="hero-description">{description}</p>
       
       <div class="hero-ctas">
-        <a 
-          href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hola! Me gustaría hacer una reserva')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-primary"
-        >
-          Reservar WhatsApp
-        </a>
-        <a href="#menu" class="btn btn-secondary">
-          {ctaText}
-        </a>
+        <a href="#menu" class="btn btn-primary">Ver menú</a>
       </div>
     </div>
   </div>
@@ -45,7 +35,7 @@ const heroImage = backgroundImages && backgroundImages[0]
 <style>
   .hero {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100dvh - 64px);
     display: flex;
     align-items: center;
     justify-content: center;
