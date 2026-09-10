@@ -1,10 +1,14 @@
 ---
+import siteData from '../content/site.json';
+
 const navLinks = [
   { href: '#historia', label: 'Historia' },
   { href: '#menu', label: 'Menú' },
   { href: '#galeria', label: 'Galería' },
   { href: '#contacto', label: 'Contacto' }
 ];
+
+const { whatsapp } = siteData.contact;
 ---
 
 <header class="header">
@@ -17,6 +21,14 @@ const navLinks = [
       {navLinks.map(link => (
         <a href={link.href} class="nav-link">{link.label}</a>
       ))}
+      <a 
+        href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hola! Me gustaría hacer una reserva')}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-primary btn-small"
+      >
+        Reservar
+      </a>
     </nav>
 
     <button class="mobile-menu-btn mobile-only" id="mobile-menu-btn" aria-label="Abrir menú">
@@ -66,10 +78,11 @@ const navLinks = [
 
   .logo img {
     display: block;
-    height: 40px;
+    height: 48px;
     width: auto;
-    max-height: 40px;
+    max-height: 48px;
     object-fit: contain;
+    filter: brightness(0) saturate(100%);
   }
 
   /* Desktop nav - MUST be hidden on mobile with high specificity */
@@ -186,7 +199,7 @@ const navLinks = [
 
   .mobile-menu-header img {
     display: block;
-    height: 36px;
+    height: 40px;
     width: auto;
     object-fit: contain;
   }
