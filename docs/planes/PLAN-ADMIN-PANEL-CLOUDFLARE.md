@@ -1,5 +1,11 @@
 # Plan: Panel de administración Don Franco (Cloudflare)
 
+> **⚠️ ESTE DOCUMENTO ES LA VERSIÓN ORIGINAL**  
+> **📄 Ver versión enmendada:** [`PLAN-ADMIN-PANEL-CLOUDFLARE-v2.md`](./PLAN-ADMIN-PANEL-CLOUDFLARE-v2.md)  
+> **Estado actual:** v2 incorpora TODAS las correcciones P0 de auditorías A/B — **usar v2 para implementación**
+
+---
+
 **Estado:** borrador formal — pendiente 2 auditorías + aprobación Gabriel  
 **Fecha:** 2026-09-10  
 **Repo:** `GabFrank/don-franco-website`  
