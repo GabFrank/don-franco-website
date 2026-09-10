@@ -45,7 +45,8 @@ export const api = {
       fetch(
         `${API_BASE}/text-blocks?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<TextBlock[]>),
+      ).then(handleResponse<{ items: TextBlock[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/text-blocks/${id}`, { headers: getAuthHeaders() }).then(
@@ -78,7 +79,8 @@ export const api = {
       fetch(
         `${API_BASE}/images?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<Image[]>),
+      ).then(handleResponse<{ items: Image[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/images/${id}`, { headers: getAuthHeaders() }).then(
@@ -111,7 +113,8 @@ export const api = {
       fetch(
         `${API_BASE}/beers?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<Beer[]>),
+      ).then(handleResponse<{ items: Beer[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/beers/${id}`, { headers: getAuthHeaders() }).then(
@@ -144,7 +147,8 @@ export const api = {
       fetch(
         `${API_BASE}/menu-categories?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<MenuCategory[]>),
+      ).then(handleResponse<{ items: MenuCategory[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/menu-categories/${id}`, { headers: getAuthHeaders() }).then(
@@ -176,9 +180,9 @@ export const api = {
     list: (includeHidden = true, includeDeleted = false, categoryId?: string) => {
       let url = `${API_BASE}/menu-items?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`;
       if (categoryId) url += `&category_id=${categoryId}`;
-      return fetch(url, { headers: getAuthHeaders() }).then(
-        handleResponse<MenuItem[]>
-      );
+      return fetch(url, { headers: getAuthHeaders() })
+        .then(handleResponse<{ items: MenuItem[]; count: number }>)
+        .then(data => data.items);
     },
     
     get: (id: string) =>
@@ -212,7 +216,8 @@ export const api = {
       fetch(
         `${API_BASE}/menu-pages?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<MenuPage[]>),
+      ).then(handleResponse<{ items: MenuPage[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/menu-pages/${id}`, { headers: getAuthHeaders() }).then(
@@ -245,7 +250,8 @@ export const api = {
       fetch(
         `${API_BASE}/gallery-images?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<GalleryImage[]>),
+      ).then(handleResponse<{ items: GalleryImage[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/gallery-images/${id}`, { headers: getAuthHeaders() }).then(
@@ -278,7 +284,8 @@ export const api = {
       fetch(
         `${API_BASE}/review-quotes?includeHidden=${includeHidden}&includeDeleted=${includeDeleted}`,
         { headers: getAuthHeaders() }
-      ).then(handleResponse<ReviewQuote[]>),
+      ).then(handleResponse<{ items: ReviewQuote[]; count: number }>)
+      .then(data => data.items),
     
     get: (id: string) =>
       fetch(`${API_BASE}/review-quotes/${id}`, { headers: getAuthHeaders() }).then(
@@ -336,9 +343,9 @@ export const api = {
 
   settings: {
     list: () =>
-      fetch(`${API_BASE}/settings`, { headers: getAuthHeaders() }).then(
-        handleResponse<Setting[]>
-      ),
+      fetch(`${API_BASE}/settings`, { headers: getAuthHeaders() })
+        .then(handleResponse<{ items: Setting[]; count: number }>)
+        .then(data => data.items),
     
     get: (key: string) =>
       fetch(`${API_BASE}/settings/${key}`, { headers: getAuthHeaders() }).then(
@@ -367,9 +374,9 @@ export const api = {
       }).then(handleResponse<PublishLog>),
     
     getLog: () =>
-      fetch(`${API_BASE}/publish`, { headers: getAuthHeaders() }).then(
-        handleResponse<PublishLog[]>
-      ),
+      fetch(`${API_BASE}/publish`, { headers: getAuthHeaders() })
+        .then(handleResponse<{ items: PublishLog[]; count: number }>)
+        .then(data => data.items),
     
     getStatus: (id: string) =>
       fetch(`${API_BASE}/publish/${id}`, { headers: getAuthHeaders() }).then(
