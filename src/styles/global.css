@@ -91,6 +91,16 @@ button {
 }
 
 .section {
+
+.section-compact {
+  padding: var(--space-12) 0;
+}
+
+@media (min-width: 768px) {
+  .section-compact {
+    padding: var(--space-16) 0;
+  }
+}
   padding: var(--section-spacing) 0;
   scroll-margin-top: 80px;
 }

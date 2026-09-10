@@ -2,7 +2,7 @@
 import siteData from '../content/site.json';
 import { fetchPlaceRating } from '../lib/places';
 
-const { title, placeId, rating: fallbackRating, reviewCount: fallbackReviewCount, linkText, mapsUrl } = siteData.reviews;
+const { title, placeId, rating: fallbackRating, reviewCount: fallbackReviewCount, linkText, mapsUrl, quotes = [] } = siteData.reviews;
 const apiKey = import.meta.env.GOOGLE_PLACES_API_KEY;
 
 let rating = fallbackRating;
@@ -49,14 +49,36 @@ const stars = Math.round(rating);
           {linkText}
         </a>
       </div>
+
+      {quotes && quotes.length > 0 && (
+        <div class="review-quotes">
+          {quotes.map((quote) => (
+            <div class="quote-card">
+              <div class="quote-stars">★★★★★</div>
+              <p class="quote-text">"{quote.text}"</p>
+              <p class="quote-author">— {quote.author}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 </section>
 
 <style>
   .reviews-content {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .reviews-content {
+      grid-template-columns: 350px 1fr;
+      align-items: start;
+    }
   }
 
   .rating-card {
@@ -89,5 +111,39 @@ const stars = Math.round(rating);
     font-size: var(--text-lg);
     color: var(--color-muted);
     margin-bottom: var(--space-6);
+  }
+
+  .review-quotes {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .quote-card {
+    background: var(--color-surface);
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border-left: 3px solid var(--color-accent);
+  }
+
+  .quote-stars {
+    color: var(--color-accent-2);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-3);
+    letter-spacing: 0.1em;
+  }
+
+  .quote-text {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+    font-style: italic;
+  }
+
+  .quote-author {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    font-weight: 600;
   }
 </style>
