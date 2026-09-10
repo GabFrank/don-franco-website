@@ -1,11 +1,24 @@
 ---
 import siteData from '../content/site.json';
+import { getMenuPageImageUrl } from '../lib/drive';
 
-const { title, tagline, description, ctaText } = siteData.hero;
+const { title, tagline, description, ctaText, backgroundImages } = siteData.hero;
 const { whatsapp } = siteData.contact;
+
+// Convert Drive share links to direct image URLs
+const heroImage = backgroundImages && backgroundImages[0] 
+  ? getMenuPageImageUrl({ url: backgroundImages[0] })
+  : '';
 ---
 
 <section class="hero">
+  {heroImage && (
+    <div class="hero-background">
+      <img src={heroImage} alt="Don Franco" loading="eager" />
+      <div class="hero-overlay"></div>
+    </div>
+  )}
+  
   <div class="hero-content">
     <div class="hero-text">
       <h1 class="hero-title">{title}</h1>
@@ -13,16 +26,16 @@ const { whatsapp } = siteData.contact;
       <p class="hero-description">{description}</p>
       
       <div class="hero-ctas">
-        <a href="#menu" class="btn btn-primary">
-          {ctaText}
-        </a>
         <a 
           href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hola! Me gustaría hacer una reserva')}`}
           target="_blank"
           rel="noopener noreferrer"
-          class="btn btn-secondary"
+          class="btn btn-primary"
         >
           Reservar WhatsApp
+        </a>
+        <a href="#menu" class="btn btn-secondary">
+          {ctaText}
         </a>
       </div>
     </div>
@@ -36,23 +49,47 @@ const { whatsapp } = siteData.contact;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-surface) 100%);
+    background: var(--color-bg);
     overflow: hidden;
   }
 
-  .hero::before {
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(26, 22, 20, 0.85) 0%,
+      rgba(26, 22, 20, 0.75) 50%,
+      rgba(232, 93, 4, 0.15) 100%
+    );
+  }
+
+  .hero::after {
     content: '';
     position: absolute;
     inset: 0;
     background-image: 
-      radial-gradient(circle at 20% 30%, rgba(232, 93, 4, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(240, 162, 2, 0.08) 0%, transparent 50%);
+      radial-gradient(circle at 20% 30%, rgba(232, 93, 4, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(240, 162, 2, 0.06) 0%, transparent 50%);
     pointer-events: none;
+    z-index: 1;
   }
 
   .hero-content {
     position: relative;
-    z-index: var(--z-base);
+    z-index: 2;
     max-width: var(--container-max);
     margin: 0 auto;
     padding: var(--space-8) var(--container-padding);
@@ -70,7 +107,7 @@ const { whatsapp } = siteData.contact;
     letter-spacing: 0.1em;
     color: var(--color-text);
     margin-bottom: var(--space-4);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
   }
 
   .hero-tagline {
@@ -80,16 +117,18 @@ const { whatsapp } = siteData.contact;
     color: var(--color-accent);
     margin-bottom: var(--space-6);
     text-transform: uppercase;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 
   .hero-description {
-    font-size: var(--text-lg);
-    line-height: 1.8;
-    color: var(--color-muted);
+    font-size: var(--text-xl);
+    line-height: 1.6;
+    color: var(--color-text);
     margin-bottom: var(--space-8);
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
   }
 
   .hero-ctas {
@@ -103,10 +142,6 @@ const { whatsapp } = siteData.contact;
     .hero-ctas {
       flex-direction: row;
       justify-content: center;
-    }
-
-    .hero-description {
-      font-size: var(--text-xl);
     }
   }
 </style>

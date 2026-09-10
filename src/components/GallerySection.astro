@@ -1,18 +1,27 @@
 ---
 import siteData from '../content/site.json';
-import { fetchDriveFolderImages } from '../lib/drive';
+import { fetchDriveFolderImages, buildDriveViewUrl } from '../lib/drive';
 
-const { title, intro, emptyMessage, folderUrl, limit } = siteData.gallery;
+const { title, intro, emptyMessage, folderUrl, limit, fallbackImages } = siteData.gallery;
 const apiKey = import.meta.env.GOOGLE_DRIVE_API_KEY;
 
-const images = await fetchDriveFolderImages({
+let images = await fetchDriveFolderImages({
   apiKey,
   folder: folderUrl,
   limit: limit || 12
 });
+
+// Use fallback images if API returns empty
+if (images.length === 0 && fallbackImages && fallbackImages.length > 0) {
+  images = fallbackImages.map((fileId: string, index: number) => ({
+    url: buildDriveViewUrl(fileId),
+    alt: `Foto ${index + 1}`,
+    link: `https://drive.google.com/file/d/${fileId}/view`
+  }));
+}
 ---
 
-<section id="galeria" class="section">
+<section id="galeria" class="section section-dark">
   <div class="container">
     <h2 class="section-title">{title}</h2>
     <p class="gallery-intro">{intro}</p>
@@ -30,8 +39,8 @@ const images = await fetchDriveFolderImages({
             />
             <div class="gallery-overlay">
               <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 21l-6-6m0 0l-6-6m6 6l6-6m-6 6l-6 6"/>
-                <circle cx="12" cy="12" r="10"/>
+                <circle cx="16" cy="16" r="10"/>
+                <path d="M16 12v8m-4-4h8"/>
               </svg>
             </div>
           </div>

@@ -11,17 +11,23 @@ const showPng = mode === 'png' || mode === 'both';
 const showDigital = mode === 'digital' || mode === 'both';
 
 let menuPages: Array<{ url: string; alt: string }> = [];
+let firstPagePreview = '';
 if (showPng && menuPagesData.pages) {
   menuPages = menuPagesData.pages.map((page: any) => ({
     url: getMenuPageImageUrl(page),
     alt: page.alt || 'Página de menú'
   }));
+  firstPagePreview = menuPages[0]?.url || '';
 }
 
 const categories = showDigital ? menuDigitalData.categories : [];
+
+// Get spotlight items from menu-digital (first 3 items from first category with items)
+const spotlightCategory = menuDigitalData.categories.find((cat: any) => cat.items && cat.items.length > 0);
+const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) : [];
 ---
 
-<section id="menu" class="section">
+<section id="menu" class="section section-light">
   <div class="container">
     <h2 class="section-title">Nuestro Menú</h2>
 
@@ -34,8 +40,22 @@ const categories = showDigital ? menuDigitalData.categories : [];
 
     {showPng && (
       <div class="menu-png" data-content="png" style={mode === 'both' ? '' : 'display: block'}>
-        <p class="menu-intro">Explora nuestro menú completo</p>
-        <button class="btn btn-primary" id="open-menu-fullscreen">Ver Menú Completo</button>
+        {firstPagePreview && (
+          <div class="menu-preview-card">
+            <img src={firstPagePreview} alt="Menú Don Franco" class="menu-preview-image" />
+            <div class="menu-preview-overlay">
+              <button class="btn btn-primary" id="open-menu-fullscreen">
+                Ver Menú Completo
+              </button>
+            </div>
+          </div>
+        )}
+        {!firstPagePreview && (
+          <div class="menu-cta-fallback">
+            <p class="menu-intro">Explora nuestro menú completo</p>
+            <button class="btn btn-primary" id="open-menu-fullscreen">Ver Menú Completo</button>
+          </div>
+        )}
       </div>
     )}
 
@@ -72,6 +92,23 @@ const categories = showDigital ? menuDigitalData.categories : [];
         ))}
       </div>
     )}
+
+    {mode === 'png' && spotlightItems.length > 0 && (
+      <div class="menu-spotlight">
+        <h3 class="spotlight-title">Clásicos de la Casa</h3>
+        <div class="spotlight-items">
+          {spotlightItems.map((item: any) => (
+            <div class="spotlight-item">
+              <h4 class="spotlight-item-name">{item.name}</h4>
+              <p class="spotlight-item-description">{item.description}</p>
+              <span class="spotlight-item-price">
+                {item.currency} {item.price.toLocaleString('es-PY')}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </section>
 
@@ -79,12 +116,94 @@ const categories = showDigital ? menuDigitalData.categories : [];
   .menu-intro {
     text-align: center;
     font-size: var(--text-lg);
-    color: var(--color-muted);
+    color: #5A5046;
     margin-bottom: var(--space-6);
   }
 
-  .menu-png {
+  .menu-cta-fallback {
     text-align: center;
+    padding: var(--space-8);
+  }
+
+  .menu-preview-card {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto var(--space-8);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+  }
+
+  .menu-preview-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .menu-preview-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26, 22, 20, 0.9) 0%, transparent 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: var(--space-6);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  .menu-preview-card:hover .menu-preview-overlay {
+    opacity: 1;
+  }
+
+  .menu-spotlight {
+    margin-top: var(--space-12);
+    padding-top: var(--space-12);
+    border-top: 2px solid var(--color-border);
+  }
+
+  .spotlight-title {
+    font-size: var(--text-2xl);
+    color: var(--color-accent);
+    text-align: center;
+    margin-bottom: var(--space-8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .spotlight-items {
+    display: grid;
+    gap: var(--space-6);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .spotlight-item {
+    background: white;
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .spotlight-item-name {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-bg);
+    margin-bottom: var(--space-2);
+  }
+
+  .spotlight-item-description {
+    font-size: var(--text-base);
+    color: #5A5046;
+    line-height: 1.6;
+    margin-bottom: var(--space-3);
+  }
+
+  .spotlight-item-price {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-accent);
   }
 
   .menu-tabs {
@@ -102,8 +221,8 @@ const categories = showDigital ? menuDigitalData.categories : [];
     text-transform: uppercase;
     letter-spacing: 0.05em;
     border-radius: var(--radius-md);
-    background: var(--color-surface);
-    color: var(--color-muted);
+    background: white;
+    color: var(--color-bg);
     border: 2px solid var(--color-border);
     transition: all var(--transition-base);
     min-height: var(--touch-target);
@@ -122,7 +241,7 @@ const categories = showDigital ? menuDigitalData.categories : [];
   }
 
   .menu-category {
-    background: var(--color-surface);
+    background: white;
     border-radius: var(--radius-lg);
     padding: var(--space-6);
     border: 1px solid var(--color-border);
@@ -136,7 +255,7 @@ const categories = showDigital ? menuDigitalData.categories : [];
 
   .category-description {
     font-size: var(--text-base);
-    color: var(--color-muted);
+    color: #5A5046;
     margin-bottom: var(--space-6);
   }
 
@@ -166,7 +285,7 @@ const categories = showDigital ? menuDigitalData.categories : [];
 
   .item-name {
     font-size: var(--text-lg);
-    color: var(--color-text);
+    color: var(--color-bg);
     margin-bottom: var(--space-1);
   }
 
@@ -179,7 +298,7 @@ const categories = showDigital ? menuDigitalData.categories : [];
 
   .item-description {
     font-size: var(--text-sm);
-    color: var(--color-muted);
+    color: #5A5046;
     line-height: 1.6;
   }
 
@@ -193,6 +312,10 @@ const categories = showDigital ? menuDigitalData.categories : [];
       grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
       gap: var(--space-8);
     }
+
+    .spotlight-items {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
   }
 </style>
 
@@ -202,17 +325,21 @@ const categories = showDigital ? menuDigitalData.categories : [];
     import { getMenuPageImageUrl } from '../lib/drive';
     
     const openBtn = document.getElementById('open-menu-fullscreen');
+    const previewCard = document.querySelector('.menu-preview-card');
     const menuPages = menuPagesData.pages.map((page: any) => ({
       url: getMenuPageImageUrl(page),
       alt: page.alt || 'Página de menú'
     }));
 
-    openBtn?.addEventListener('click', () => {
+    const openMenu = () => {
       const event = new CustomEvent('open-menu-fullscreen', { 
         detail: { pages: menuPages } 
       });
       window.dispatchEvent(event);
-    });
+    };
+
+    openBtn?.addEventListener('click', openMenu);
+    previewCard?.addEventListener('click', openMenu);
   </script>
 )}
 

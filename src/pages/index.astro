@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
+import TrustStrip from '../components/TrustStrip.astro';
 import StorySection from '../components/StorySection.astro';
 import MenuSection from '../components/MenuSection.astro';
 import MenuFullscreen from '../components/MenuFullscreen.astro';
@@ -11,6 +12,7 @@ import ContactSection from '../components/ContactSection.astro';
 import MapSection from '../components/MapSection.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import StickyCtaBar from '../components/StickyCtaBar.astro';
 
 import siteData from '../content/site.json';
 ---
@@ -22,6 +24,7 @@ import siteData from '../content/site.json';
   <Header />
   <main>
     <Hero />
+    <TrustStrip />
     <StorySection />
     <MenuSection />
     <GallerySection />
@@ -31,5 +34,6 @@ import siteData from '../content/site.json';
   </main>
   <Footer />
   <MenuFullscreen />
+  <StickyCtaBar />
   <WhatsAppFloat />
 </BaseLayout>

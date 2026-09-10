@@ -11,7 +11,7 @@
   --color-border: #3D342C;
 
   /* Typography scale */
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-display: 'Oswald', var(--font-sans);
   
   --text-xs: 0.75rem;

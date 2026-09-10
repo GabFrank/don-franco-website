@@ -1,11 +1,11 @@
 {
   "siteName": "Don Franco",
   "tagline": "RESTAURANTE ARTESANAL",
-  "metaDescription": "Restaurante especializado en hamburguesas y cervezas artesanales.",
+  "metaDescription": "Hamburguesas artesanales, cervezas caseras y parrilla en Salto del Guairá. Don Franco: donde la pasión por lo artesanal se encuentra con el sabor auténtico.",
   "hero": {
     "title": "DON FRANCO",
     "tagline": "RESTAURANTE ARTESANAL",
-    "description": "Una buena cerveza siempre esta acompañada de una buena hamburguesa, un jugoso steak o una deliciosa pizza. ",
+    "description": "Hamburguesas artesanales, cerveza casera y parrilla en Salto del Guairá.",
     "ctaText": "VER MENÚ",
     "carouselFolderUrl": "https://drive.google.com/drive/folders/1HenAdd-BOySFjUfUZ3V1MaN0SCeWSH6C",
     "carouselLimit": 10,
@@ -43,7 +43,11 @@
   "gallery": {
     "title": "GALERÍA",
     "intro": "Conoce nuestro espacio y platos.",
-    "emptyMessage": "Las fotos de la galería se configuran desde una carpeta de Drive.",
+    "emptyMessage": "Próximamente agregaremos más fotos de nuestro restaurante.",
+    "fallbackImages": [
+      "1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS",
+      "1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL"
+    ],
     "folderUrl": "https://drive.google.com/drive/folders/1ZuJnBxiOMcAY5LirsBKXkksJueygO3fL",
     "limit": 12
   },
@@ -60,16 +64,16 @@
     "reservasLabel": "Reservas (WhatsApp)",
     "reservarCta": "RESERVAR",
     "phoneLabel": "Teléfono",
-    "phone": "+595983327600",
+    "phone": "+595 983 327 600",
     "whatsapp": "595983327600",
     "addressLabel": "Dirección",
     "address": "Av. Paraguay c/ 30 de julio",
     "hoursLabel": "Horarios",
-    "hours": "Lunes a Lunes 17:00 - 00:00"
+    "hours": "Todos los días 17:00 - 00:00"
   },
   "map": {
     "title": "CÓMO LLEGAR",
-    "embedUrl": "",
+    "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.5!2d-54.3!3d-24.05!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDAzJzAwLjAiUyA1NMKwMTgnMDAuMCJX!5e0!3m2!1sen!2spy!4v1234567890",
     "fallbackLink": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
   },
   "footer": {

@@ -2,25 +2,65 @@
 import siteData from '../content/site.json';
 
 const { title, paragraphs } = siteData.story;
+
+const proofChips = [
+  { text: '2018 primera cerveza artesanal región', icon: '🍺' },
+  { text: '2020 restaurante', icon: '🍔' },
+  { text: 'Hecho en Salto del Guairá', icon: '🇵🇾' }
+];
 ---
 
-<section id="historia" class="section">
+<section id="historia" class="section section-light">
   <div class="container">
     <h2 class="section-title">{title}</h2>
     
+    <div class="story-chips">
+      {proofChips.map(chip => (
+        <div class="story-chip">
+          <span class="chip-icon">{chip.icon}</span>
+          <span class="chip-text">{chip.text}</span>
+        </div>
+      ))}
+    </div>
+
     <div class="story-content">
       {paragraphs.map((paragraph: string) => (
         <p class="story-paragraph">{paragraph}</p>
       ))}
     </div>
-
-    <div class="story-badge">
-      <span class="badge">Desde 2018</span>
-    </div>
   </div>
 </section>
 
 <style>
+  .story-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+    margin-bottom: var(--space-10);
+  }
+
+  .story-chip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-craft);
+    color: var(--color-text);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .chip-icon {
+    font-size: var(--text-lg);
+  }
+
+  .chip-text {
+    white-space: nowrap;
+  }
+
   .story-content {
     max-width: 800px;
     margin: 0 auto;
@@ -36,14 +76,13 @@ const { title, paragraphs } = siteData.story;
     text-align: center;
   }
 
-  .story-badge {
-    margin-top: var(--space-8);
-    text-align: center;
-  }
-
   @media (min-width: 768px) {
     .story-paragraph {
       font-size: var(--text-xl);
+    }
+
+    .story-chip {
+      font-size: var(--text-base);
     }
   }
 </style>
