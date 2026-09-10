@@ -99,17 +99,22 @@ const { title, reservasLabel, reservarCta, phoneLabel, phone, whatsapp, addressL
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--color-muted);
+    color: #5A5046;
   }
 
   .contact-value {
     font-size: var(--text-lg);
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--color-bg);
     line-height: 1.6;
   }
 
-  .contact-value:hover {
+  .contact-value a {
+    color: var(--color-bg);
+    transition: color var(--transition-fast);
+  }
+
+  .contact-value a:hover {
     color: var(--color-accent);
   }
 

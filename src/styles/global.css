@@ -152,7 +152,7 @@ button {
   border: 2px solid transparent;
 }
 
-n.btn-small {
+.btn-small {
   padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm);
   min-height: 36px;
