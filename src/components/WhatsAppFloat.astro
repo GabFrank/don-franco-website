@@ -1,7 +1,8 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
 
-const { whatsapp } = siteData.contact;
+const content = await fetchPublicContent();
+const whatsapp = content.contact?.whatsapp || '595983327600';
 ---
 
 <a 

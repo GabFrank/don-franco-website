@@ -1,8 +1,18 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
 
-const { tagline, mapsUrl, instagramUrl, facebookUrl, legalText } = siteData.footer;
-const { address, hours, whatsapp } = siteData.contact;
+const content = await fetchPublicContent();
+
+const tagline = 'RESTAURANTE ARTESANAL';
+const mapsUrl = 'https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9';
+const instagramUrl = 'https://www.instagram.com/donfrancobs';
+const facebookUrl = 'https://www.facebook.com/donfrancobs';
+const legalText = 'Todos los derechos reservados.';
+
+const address = content.contact?.address || 'Av. Paraguay c/ 30 de julio, Salto del Guairá, Paraguay';
+const hours = content.contact?.hours || 'Todos los días 17:00 - 00:00';
+const whatsapp = content.contact?.whatsapp || '595983327600';
+
 const currentYear = new Date().getFullYear();
 ---
 

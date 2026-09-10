@@ -1,22 +1,37 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
 import { fetchPlaceRating } from '../lib/places';
 
-const { title, placeId, rating: fallbackRating, reviewCount: fallbackReviewCount, linkText, mapsUrl, quotes = [] } = siteData.reviews;
+const content = await fetchPublicContent();
+
+const title = 'Lo que dicen';
+const placeId = content.settings.placeId || '';
+const linkText = 'Ver en Google Maps';
+const mapsUrl = 'https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9';
+
+// Start with D1 values
+let rating = content.reviews.stats?.rating || 4.8;
+let reviewCount = content.reviews.stats?.review_count || 120;
+const blockVisible = content.reviews.stats?.block_visible || 1;
+
+// Override with live Google data if available
 const apiKey = import.meta.env.GOOGLE_PLACES_API_KEY;
-
-let rating = fallbackRating;
-let reviewCount = fallbackReviewCount;
-
 if (placeId && apiKey) {
   const placeData = await fetchPlaceRating(apiKey, placeId);
   if (placeData.rating) rating = placeData.rating;
   if (placeData.user_ratings_total) reviewCount = placeData.user_ratings_total;
 }
 
+const quotes = content.reviews.quotes.map(q => ({
+  text: q.text,
+  author: q.author
+}));
+
 const stars = Math.round(rating);
+const showReviews = blockVisible === 1;
 ---
 
+{showReviews && (
 <section id="reviews" class="section section-dark">
   <div class="container">
     <h2 class="section-title">Lo que dicen</h2>
@@ -64,6 +79,7 @@ const stars = Math.round(rating);
     </div>
   </div>
 </section>
+)}
 
 <style>
   .reviews-content {

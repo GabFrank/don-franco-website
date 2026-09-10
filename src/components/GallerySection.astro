@@ -1,24 +1,23 @@
 ---
-import siteData from '../content/site.json';
-import { fetchDriveFolderImages, buildDriveViewUrl } from '../lib/drive';
+import { fetchPublicContent, getR2ImageUrl } from '../lib/content-api';
+import { buildDriveViewUrl } from '../lib/drive';
 
-const { title, intro, emptyMessage, folderUrl, limit, fallbackImages } = siteData.gallery;
-const apiKey = import.meta.env.GOOGLE_DRIVE_API_KEY;
+const content = await fetchPublicContent();
 
-let images = await fetchDriveFolderImages({
-  apiKey,
-  folder: folderUrl,
-  limit: limit || 12
-});
+const title = 'Galería';
+const intro = 'Conoce nuestro espacio y platos.';
+const emptyMessage = 'Próximamente agregaremos más fotos de nuestro restaurante.';
 
-// Use fallback images if API returns empty
-if (images.length === 0 && fallbackImages && fallbackImages.length > 0) {
-  images = fallbackImages.map((fileId: string, index: number) => ({
-    url: buildDriveViewUrl(fileId),
-    alt: `Foto ${index + 1}`,
-    link: `https://drive.google.com/file/d/${fileId}/view`
-  }));
-}
+let images = content.gallery.map(img => ({
+  url: img.r2_key.startsWith('http')
+    ? buildDriveViewUrl(img.r2_key.includes('/d/') ? img.r2_key.split('/d/')[1].split('/')[0] : '')
+    : getR2ImageUrl(img.r2_key),
+  alt: img.alt || 'Foto de galería',
+  link: img.r2_key.startsWith('http') ? img.r2_key : ''
+}));
+
+// Limit to first 12 images
+images = images.slice(0, 12);
 ---
 
 <section id="galeria" class="section section-dark">

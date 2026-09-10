@@ -1,7 +1,17 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
 
-const { title, whatsappLabel, whatsappCta, whatsapp, addressLabel, address, hoursLabel, hours } = siteData.contact;
+const content = await fetchPublicContent();
+
+const title = 'Contacto';
+const whatsappLabel = 'WhatsApp';
+const whatsappCta = 'Escribinos';
+const addressLabel = 'Dirección';
+const hoursLabel = 'Horarios';
+
+const whatsapp = content.contact?.whatsapp || '595983327600';
+const address = content.contact?.address || 'Av. Paraguay c/ 30 de julio, Salto del Guairá, Paraguay';
+const hours = content.contact?.hours || 'Todos los días 17:00 - 00:00';
 ---
 
 <section id="contacto" class="section section-compact">
