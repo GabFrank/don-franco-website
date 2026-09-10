@@ -40,6 +40,20 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
 
     {showPng && (
       <div class="menu-png" data-content="png" style={mode === 'both' ? '' : 'display: block'}>
+        {spotlightItems.length > 0 && (
+          <div class="menu-destacados">
+            <h3 class="destacados-title">Destacados</h3>
+            <div class="destacados-grid">
+              {spotlightItems.map((item: any) => (
+                <div class="destacado-item">
+                  <span class="destacado-name">{item.name}</span>
+                  <span class="destacado-price">{item.price.toLocaleString('es-PY')} {item.currency}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
         {firstPagePreview && (
           <div class="menu-preview-card">
             <img src={firstPagePreview} alt="Menú Don Franco" class="menu-preview-image" />
@@ -131,6 +145,57 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
   .menu-cta-fallback {
     text-align: center;
     padding: var(--space-8);
+  }
+
+  .menu-destacados {
+    background: var(--color-text);
+    border: 1px solid rgba(26, 22, 20, 0.1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .destacados-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-accent);
+    margin-bottom: var(--space-4);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+
+  .destacados-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 640px) {
+    .destacados-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .destacado-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    background: rgba(232, 93, 4, 0.05);
+    border-radius: var(--radius-md);
+  }
+
+  .destacado-name {
+    font-weight: 600;
+    color: var(--color-bg);
+    font-size: var(--text-base);
+  }
+
+  .destacado-price {
+    font-weight: 700;
+    color: var(--color-accent);
+    font-size: var(--text-sm);
   }
 
   .menu-preview-card {

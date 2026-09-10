@@ -153,8 +153,8 @@ button {
   padding: var(--space-3) var(--space-6);
   font-size: var(--text-base);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  
+  letter-spacing: 0.02em;
   border-radius: var(--radius-md);
   transition: all var(--transition-base);
   text-decoration: none;
