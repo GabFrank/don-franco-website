@@ -130,6 +130,18 @@ const heroImage = backgroundImages && backgroundImages[0]
     }
   }
 
+  @media (max-width: 359px) {
+    .hero-title {
+      font-size: clamp(2rem, 8vw, 3rem);
+      letter-spacing: 0.03em;
+    }
+
+    .hero-tagline {
+      font-size: var(--text-lg);
+      letter-spacing: 0.08em;
+    }
+  }
+
   .hero-description {
     font-size: var(--text-xl);
     line-height: 1.6;

@@ -25,7 +25,7 @@ body {
 
 @media (max-width: 767px) {
   body {
-    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    padding-bottom: calc(68px + env(safe-area-inset-bottom));
   }
 }
 
@@ -34,8 +34,9 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.02em;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
 }
 
 h1 { font-size: var(--text-4xl); }
@@ -114,6 +115,9 @@ button {
   text-transform: uppercase;
   letter-spacing: 0.03em;
   font-weight: 600;
+  padding: 0 var(--space-4);
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 @media (min-width: 768px) {
@@ -197,5 +201,12 @@ button {
   .section-title {
     font-size: var(--text-2xl);
     letter-spacing: 0.02em;
+  }
+}
+
+@media (max-width: 359px) {
+  .section-title {
+    font-size: var(--text-xl);
+    letter-spacing: 0.01em;
   }
 }
