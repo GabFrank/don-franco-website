@@ -57,7 +57,17 @@
     "rating": 4.8,
     "reviewCount": 120,
     "linkText": "Ver en Google Maps",
-    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
+    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9",
+    "quotes": [
+      {
+        "text": "Las mejores hamburguesas de la zona, y la cerveza artesanal es espectacular.",
+        "author": "Martín G."
+      },
+      {
+        "text": "Ambiente increíble y atención de primera. Volveremos seguro.",
+        "author": "Carolina R."
+      }
+    ]
   },
   "contact": {
     "title": "CONTACTO",

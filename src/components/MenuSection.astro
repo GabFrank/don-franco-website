@@ -147,6 +147,15 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
     width: 100%;
     height: auto;
     display: block;
+    border-radius: var(--radius-lg);
+  }
+
+  @media (max-width: 767px) {
+    .menu-preview-image {
+      max-height: 400px;
+      object-fit: cover;
+      object-position: top;
+    }
   }
 
   .menu-preview-overlay {
@@ -159,6 +168,13 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
     padding: var(--space-6);
     opacity: 0;
     transition: opacity var(--transition-base);
+  }
+
+  @media (max-width: 767px) {
+    .menu-preview-overlay {
+      opacity: 1;
+      background: linear-gradient(to top, rgba(26, 22, 20, 0.92) 0%, rgba(26, 22, 20, 0.7) 60%, transparent 100%);
+    }
   }
 
   .menu-preview-card:hover .menu-preview-overlay {

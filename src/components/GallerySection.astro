@@ -29,7 +29,7 @@ if (images.length === 0 && fallbackImages && fallbackImages.length > 0) {
     {images.length === 0 ? (
       <p class="gallery-empty">{emptyMessage}</p>
     ) : (
-      <div class="gallery-grid">
+      <div class="gallery-grid" data-count={images.length}>
         {images.map((image, index) => (
           <div class="gallery-item" data-index={index}>
             <img 
@@ -95,6 +95,20 @@ if (images.length === 0 && fallbackImages && fallbackImages.length > 0) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .gallery-grid[data-count="1"] {
+      grid-template-columns: 1fr;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .gallery-grid[data-count="2"] {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 900px;
+      margin: 0 auto;
+    }
   }
 
   .gallery-item {
