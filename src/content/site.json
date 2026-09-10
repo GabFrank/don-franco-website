@@ -32,12 +32,9 @@
     "title": "NUESTRA HISTORIA",
     "paragraphs": [
       "Don Franco nace de nuestra pasión por lo artesanal.",
-
-"Todo comenzó en 2018, cuando inauguramos en Salto del Guairá la primera fábrica de cerveza artesanal de la región. Lo que empezó como curiosidad se transformó en oficio: aprender, experimentar y crear productos hechos con tiempo, dedicación y personalidad.",
-
-"En ese camino descubrimos que una buena cerveza siempre encuentra su mejor compañía en una gran comida. Así, en 2020 decidimos dar el siguiente paso y abrir Don Franco Restaurante.",
-
-"Hoy combinamos esa misma filosofía artesanal en la cocina: hamburguesas autorales, cortes premium, porciones generosas, pizzas y sabores pensados para disfrutarse sin apuro."
+      "Todo comenzó en 2018, cuando inauguramos en Salto del Guairá la primera fábrica de cerveza artesanal de la región. Lo que empezó como curiosidad se transformó en oficio: aprender, experimentar y crear productos hechos con tiempo, dedicación y personalidad.",
+      "En ese camino descubrimos que una buena cerveza siempre encuentra su mejor compañía en una gran comida. Así, en 2020 decidimos dar el siguiente paso y abrir Don Franco Restaurante.",
+      "Hoy combinamos esa misma filosofía artesanal en la cocina: hamburguesas autorales, cortes premium, porciones generosas, pizzas y sabores pensados para disfrutarse sin apuro."
     ]
   },
   "gallery": {
@@ -90,5 +87,28 @@
     "instagramUrl": "https://www.instagram.com/donfrancobs",
     "facebookUrl": "https://www.facebook.com/donfrancobs",
     "legalText": "Todos los derechos reservados."
+  },
+  "beers": {
+    "title": "Nuestras cervezas artesanales",
+    "items": [
+      {
+        "name": "IPA",
+        "style": "India Pale Ale",
+        "notes": "Amarga y aromática con notas cítricas",
+        "image": ""
+      },
+      {
+        "name": "Lager",
+        "style": "Cerveza clara",
+        "notes": "Suave y refrescante, perfecta para acompañar",
+        "image": ""
+      },
+      {
+        "name": "Stout",
+        "style": "Cerveza oscura",
+        "notes": "Cremosa con sabores tostados y chocolate",
+        "image": ""
+      }
+    ]
   }
 }
