@@ -1,0 +1,31 @@
+// Cloudflare Wrangler configuration for Don Franco admin panel
+{
+  "name": "don-franco-website",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-09-10",
+  
+  // D1 Database binding
+  // Crear con: wrangler d1 create don-franco-content
+  // Aplicar schema: wrangler d1 execute don-franco-content --file=ops/d1/schema.sql
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "don-franco-content",
+      "database_id": "REPLACE_WITH_YOUR_DATABASE_ID"
+    }
+  ],
+  
+  // R2 Bucket binding para media storage
+  // Crear con: wrangler r2 bucket create don-franco-media
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "don-franco-media"
+    }
+  ],
+  
+  // Variables de entorno (desarrollo local)
+  "vars": {
+    "ENVIRONMENT": "development"
+  }
+}

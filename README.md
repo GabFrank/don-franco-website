@@ -33,6 +33,7 @@ La salida queda en `dist/`.
 ## Documentación
 
 - **[✨ V2 Implementation Review](docs/V2-IMPLEMENTATION-REVIEW.md)** — Complete technical review of the Astro 7 greenfield rewrite (cream-first Brewery Ember theme, menu modes, component architecture, deployment guide)
+- **[🚀 Phase 1 Admin: D1/R2 Setup](docs/planes/PHASE1-ADMIN-RUNBOOK.md)** — Runbook para configurar infraestructura backend del admin panel (D1 database, R2 bucket, migraciones, seed)
 - [Requisitos y guía técnica](docs/PROJECT_REQUIREMENTS.md)
 - [Runbook: actualización de contenido](docs/CONTENT_UPDATE_RUNBOOK.md)
 - [Deploy en DigitalOcean](ops/deploy/README.md)
