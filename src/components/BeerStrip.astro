@@ -45,16 +45,20 @@ const cervezas = bebidasCategory?.items.filter((item: any) =>
     flex-direction: column;
     align-items: center;
     gap: var(--space-6);
+    width: 100%;
   }
 
   .beer-strip-header {
     display: flex;
     align-items: center;
     gap: var(--space-3);
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .beer-strip-header svg {
     color: var(--color-accent-2);
+    flex-shrink: 0;
   }
 
   .beer-strip-title {
@@ -62,6 +66,7 @@ const cervezas = bebidasCategory?.items.filter((item: any) =>
     font-weight: 700;
     color: var(--color-text);
     margin: 0;
+    min-width: 0;
   }
 
   .beer-items {
@@ -69,6 +74,7 @@ const cervezas = bebidasCategory?.items.filter((item: any) =>
     flex-wrap: wrap;
     gap: var(--space-6);
     justify-content: center;
+    width: 100%;
   }
 
   .beer-item {
@@ -80,6 +86,7 @@ const cervezas = bebidasCategory?.items.filter((item: any) =>
     background: var(--color-surface-2);
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
+    min-width: 0;
   }
 
   .beer-name {

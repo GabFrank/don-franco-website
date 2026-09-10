@@ -93,7 +93,7 @@ if (images.length === 0 && fallbackImages && fallbackImages.length > 0) {
 
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: var(--space-4);
   }
 

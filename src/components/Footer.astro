@@ -98,16 +98,20 @@ const currentYear = new Date().getFullYear();
     grid-template-columns: 1fr;
     gap: var(--space-8);
     margin-bottom: var(--space-8);
+    width: 100%;
   }
 
   .footer-brand {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    min-width: 0;
   }
 
   .footer-logo {
     display: block;
+    max-width: 100%;
+    height: auto;
   }
 
   .footer-tagline {
@@ -115,12 +119,14 @@ const currentYear = new Date().getFullYear();
     color: var(--color-muted);
     letter-spacing: 0.1em;
     text-transform: uppercase;
+    overflow-wrap: anywhere;
   }
 
   .footer-info-items {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+    min-width: 0;
   }
 
   .footer-info-item {
@@ -129,6 +135,8 @@ const currentYear = new Date().getFullYear();
     gap: var(--space-2);
     font-size: var(--text-sm);
     color: var(--color-muted);
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
 
   .footer-info-item svg {

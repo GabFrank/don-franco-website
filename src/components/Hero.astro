@@ -120,6 +120,16 @@ const heroImage = backgroundImages && backgroundImages[0]
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   }
 
+  @media (max-width: 479px) {
+    .hero-title {
+      letter-spacing: 0.05em;
+    }
+
+    .hero-tagline {
+      letter-spacing: 0.1em;
+    }
+  }
+
   .hero-description {
     font-size: var(--text-xl);
     line-height: 1.6;
@@ -136,6 +146,7 @@ const heroImage = backgroundImages && backgroundImages[0]
     flex-direction: column;
     gap: var(--space-4);
     align-items: center;
+    width: 100%;
   }
 
   @media (min-width: 768px) {

@@ -47,10 +47,14 @@ const { title, embedUrl, fallbackLink } = siteData.map;
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-lg);
+    max-width: 100%;
   }
 
   .map-embed iframe {
     display: block;
+    width: 100%;
+    max-width: 100%;
+    border: 0;
   }
 
   .map-fallback {
