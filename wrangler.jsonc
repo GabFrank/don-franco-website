@@ -1,8 +1,10 @@
-// Cloudflare Wrangler configuration for Don Franco admin panel
+// Cloudflare Wrangler configuration for Don Franco admin panel + Pages Functions
 {
   "name": "don-franco-website",
-  "main": "src/index.ts",
   "compatibility_date": "2024-09-10",
+  
+  // Pages Functions configuration
+  // Functions en /functions se despliegan automáticamente con Pages
   
   // D1 Database binding
   // Crear con: wrangler d1 create don-franco-content
@@ -11,7 +13,7 @@
     {
       "binding": "DB",
       "database_name": "don-franco-content",
-      "database_id": "REPLACE_WITH_YOUR_DATABASE_ID"
+      "database_id": "81366035-9e8d-4a2c-b0ce-af41d29cd220"
     }
   ],
   
@@ -25,7 +27,12 @@
   ],
   
   // Variables de entorno (desarrollo local)
+  // En producción configurar via Cloudflare Dashboard > Pages > Settings > Environment Variables
   "vars": {
     "ENVIRONMENT": "development"
+    // "ACCESS_AUD": "your-access-audience-tag",
+    // "ACCESS_TEAM_DOMAIN": "your-team.cloudflareaccess.com",
+    // "ADMIN_DEV_BYPASS_SECRET": "dev-secret-for-testing",
+    // "CF_PAGES_DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/..."
   }
 }
