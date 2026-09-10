@@ -20,6 +20,24 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
+// Utilidad para convertir URLs de Drive a formato lh3
+function extractDriveFileId(url: string): string | null {
+  const fileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch) return fileMatch[1];
+  
+  const ucMatch = url.match(/drive\.google\.com\/uc\?export=(view|download)&id=([a-zA-Z0-9_-]+)/);
+  if (ucMatch) return ucMatch[2];
+  
+  const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch) return idMatch[1];
+  
+  return null;
+}
+
+function buildLh3Url(fileId: string): string {
+  return `https://lh3.googleusercontent.com/d/${fileId}=w2000`;
+}
+
 // Tipos para site.json
 interface SiteData {
   siteName: string;
@@ -226,9 +244,15 @@ sql += `;\n`;
 sql += `\n-- MENU PAGES\n`;
 if (menuPagesData.pages && menuPagesData.pages.length > 0) {
   sql += `INSERT INTO menu_pages (id, title, r2_key, visible, sort_order) VALUES\n`;
-  sql += menuPagesData.pages.map((page, i) => 
-    `  ('${uuid()}', '${sqlEscape(page.alt)}', '${sqlEscape(page.url)}', 1, ${i})`
-  ).join(',\n');
+  sql += menuPagesData.pages.map((page, i) => {
+    // Convert Drive URLs to lh3 format for reliable embedding
+    let url = page.url;
+    const fileId = extractDriveFileId(url);
+    if (fileId) {
+      url = buildLh3Url(fileId);
+    }
+    return `  ('${uuid()}', '${sqlEscape(page.alt)}', '${sqlEscape(url)}', 1, ${i})`;
+  }).join(',\n');
   sql += `;\n`;
 }
 

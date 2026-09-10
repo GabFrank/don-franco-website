@@ -37,6 +37,7 @@ export function normalizeMenuItemImage(item: { image: { fileId: string; url?: st
 const DRIVE_FILE_LINK = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
 const DRIVE_FOLDER_LINK = /drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]+)/;
 const DRIVE_OPEN_QUERY_ID = /[?&]id=([a-zA-Z0-9_-]+)/;
+const DRIVE_UC_EXPORT = /drive\.google\.com\/uc\?export=(view|download)&id=([a-zA-Z0-9_-]+)/;
 
 /**
  * Resolve image URL for a menu page: accepts either fileId or full URL (Drive share link or direct image URL).
@@ -44,8 +45,18 @@ const DRIVE_OPEN_QUERY_ID = /[?&]id=([a-zA-Z0-9_-]+)/;
 export function getMenuPageImageUrl(page: { fileId?: string; url?: string }): string {
   const url = page.url?.trim();
   if (url && url.startsWith("http")) {
-    const match = url.match(DRIVE_FILE_LINK);
-    if (match) return buildDriveViewUrl(match[1]);
+    // Check for /file/d/{id} format
+    const fileMatch = url.match(DRIVE_FILE_LINK);
+    if (fileMatch) return buildDriveViewUrl(fileMatch[1]);
+    
+    // Check for uc?export=view&id={id} format (broken embed URLs)
+    const ucMatch = url.match(DRIVE_UC_EXPORT);
+    if (ucMatch) return buildDriveViewUrl(ucMatch[2]);
+    
+    // Check for ?id={id} format
+    const idMatch = url.match(DRIVE_OPEN_QUERY_ID);
+    if (idMatch) return buildDriveViewUrl(idMatch[1]);
+    
     return url;
   }
   if (page.fileId?.trim()) return buildDriveViewUrl(page.fileId.trim());
