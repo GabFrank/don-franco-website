@@ -18,8 +18,8 @@ body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: 1.6;
-  color: var(--color-text);
-  background-color: var(--color-bg);
+  color: var(--color-bg);
+  background-color: var(--color-text);
   overflow-x: clip;
   max-width: 100%;
   padding-bottom: 0;

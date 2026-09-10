@@ -27,7 +27,7 @@ const spotlightCategory = menuDigitalData.categories.find((cat: any) => cat.item
 const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) : [];
 ---
 
-<section id="menu" class="section section-light">
+<section id="menu" class="section">
   <div class="container">
     <h2 class="section-title">Nuestro Menú</h2>
 
@@ -211,10 +211,11 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
   }
 
   .spotlight-item {
-    background: white;
+    background: var(--color-text);
     padding: var(--space-6);
     border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(26, 22, 20, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
 
   .spotlight-item-name {
