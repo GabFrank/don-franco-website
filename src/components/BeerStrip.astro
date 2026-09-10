@@ -41,6 +41,13 @@ const beers = items.filter((beer: any) => beer.name);
 <style>
   .beer-section {
     overflow: hidden;
+    padding: var(--space-16) 0;
+  }
+
+  @media (min-width: 768px) {
+    .beer-section {
+      padding: var(--space-24) 0;
+    }
   }
 
   .beer-scroll-container {

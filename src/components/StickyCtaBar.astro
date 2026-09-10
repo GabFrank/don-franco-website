@@ -113,12 +113,6 @@ const { whatsapp } = siteData.contact;
     }
   }
 
-  // Hide WhatsApp float when sticky bar is visible
-  const whatsappFloat = document.querySelector('.whatsapp-float');
-  if (whatsappFloat && window.innerWidth < 768) {
-    whatsappFloat.style.display = 'none';
-  }
-
   window.addEventListener('scroll', onScroll, { passive: true });
   
   // Initial check
