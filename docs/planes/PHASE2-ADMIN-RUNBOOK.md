@@ -262,6 +262,10 @@ npm install
 
 ### 7.2. Crear recursos D1 y R2 (local)
 
+**Recursos remotos ya provisionados en Cloudflare:**
+- ✅ Base de datos D1 `don-franco-content` (id: `81366035-9e8d-4a2c-b0ce-af41d29cd220`) - schema y seed aplicados remotamente
+- ✅ Bucket R2 `don-franco-media` creado
+
 ```bash
 # Crear base de datos D1 (local para dev)
 wrangler d1 create don-franco-content-local
