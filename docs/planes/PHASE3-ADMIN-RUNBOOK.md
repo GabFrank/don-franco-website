@@ -3,7 +3,7 @@
 **Fecha:** 2026-09-10  
 **Estado:** Implementado  
 **Rama:** `cursor/feat-admin-phase3-ui-fa73`  
-**PR:** [Pendiente enlace]
+**PR:** https://github.com/GabFrank/don-franco-website/pull/6
 
 ---
 
