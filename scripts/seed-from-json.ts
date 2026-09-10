@@ -6,6 +6,7 @@
  * - settings (menuMode, whatsapp, placeId)
  * - beers
  * - menu_categories + menu_items
+ * - menu_pages
  * - review_quotes + review_stats
  * - contact_info
  * 
@@ -84,6 +85,14 @@ interface MenuData {
   }>;
 }
 
+interface MenuPagesData {
+  folderUrl: string;
+  pages: Array<{
+    url: string;
+    alt: string;
+  }>;
+}
+
 // Utilidad para generar UUIDs simples
 function uuid(): string {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
@@ -98,6 +107,7 @@ function sqlEscape(str: string): string {
 const contentDir = join(process.cwd(), 'src/content');
 const siteData: SiteData = JSON.parse(readFileSync(join(contentDir, 'site.json'), 'utf-8'));
 const menuData: MenuData = JSON.parse(readFileSync(join(contentDir, 'menu-digital.json'), 'utf-8'));
+const menuPagesData: MenuPagesData = JSON.parse(readFileSync(join(contentDir, 'menu-pages.json'), 'utf-8'));
 
 let sql = `-- ============================================================
 -- DON FRANCO SEED DATA
@@ -211,6 +221,18 @@ sql += allItems.join(',\n');
 sql += `;\n`;
 
 // ============================================================
+// MENU PAGES (PNG mode)
+// ============================================================
+sql += `\n-- MENU PAGES\n`;
+if (menuPagesData.pages && menuPagesData.pages.length > 0) {
+  sql += `INSERT INTO menu_pages (id, title, r2_key, visible, sort_order) VALUES\n`;
+  sql += menuPagesData.pages.map((page, i) => 
+    `  ('${uuid()}', '${sqlEscape(page.alt)}', '${sqlEscape(page.url)}', 1, ${i})`
+  ).join(',\n');
+  sql += `;\n`;
+}
+
+// ============================================================
 // REVIEW QUOTES + STATS
 // ============================================================
 sql += `\n-- REVIEW QUOTES\n`;
@@ -242,6 +264,7 @@ console.log(`   - Text blocks: ${textBlocks.length}`);
 console.log(`   - Cervezas: ${siteData.beers.items.length}`);
 console.log(`   - Categorías menú: ${menuData.categories.length}`);
 console.log(`   - Items menú: ${allItems.length}`);
+console.log(`   - Páginas menú (PNG): ${menuPagesData.pages.length}`);
 console.log(`   - Review quotes: ${siteData.reviews.quotes.length}`);
 console.log(`\nPara aplicar el seed:`);
 console.log(`   wrangler d1 execute don-franco-content --file=ops/d1/seed.sql`);

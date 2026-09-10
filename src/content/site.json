@@ -95,19 +95,19 @@
         "name": "IPA",
         "style": "India Pale Ale",
         "notes": "Amarga y aromática con notas cítricas",
-        "image": "/beers/ipa-placeholder.jpg"
+        "image": "/beers/ipa.svg"
       },
       {
         "name": "Lager",
         "style": "Cerveza clara",
         "notes": "Suave y refrescante, perfecta para acompañar",
-        "image": "/beers/lager-placeholder.jpg"
+        "image": "/beers/lager.svg"
       },
       {
         "name": "Stout",
         "style": "Cerveza oscura",
         "notes": "Cremosa con sabores tostados y chocolate",
-        "image": "/beers/stout-placeholder.jpg"
+        "image": "/beers/stout.svg"
       }
     ]
   }
