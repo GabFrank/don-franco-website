@@ -15,7 +15,7 @@ const beers = content.beers
           ? beer.image_r2_key 
           : getR2ImageUrl(beer.image_r2_key))
       : null,
-    imageVisible: beer.image_visible
+    imageVisible: beer.image_r2_key && beer.image_visible == null ? true : (beer.image_visible === 1)
   }));
 ---
 

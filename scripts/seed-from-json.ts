@@ -154,7 +154,7 @@ sql += `;\n`;
 // IMAGES para BEERS
 // ============================================================
 sql += `\n-- IMAGES (imágenes para cervezas)\n`;
-const beerImageIds: string[] = [];
+const beerImageIds: Array<string | null> = [];
 const beerImageInserts: string[] = [];
 siteData.beers.items.forEach((beer, i) => {
   if (beer.image) {
@@ -164,7 +164,7 @@ siteData.beers.items.forEach((beer, i) => {
       `  ('${imageId}', 'beer.${beer.name.toLowerCase().replace(/\s+/g, '-')}', 'beer', '${sqlEscape(beer.image)}', '${sqlEscape(beer.name)}', 1, ${i})`
     );
   } else {
-    beerImageIds.push('NULL');
+    beerImageIds.push(null);
   }
 });
 
@@ -179,9 +179,10 @@ if (beerImageInserts.length > 0) {
 // ============================================================
 sql += `\n-- BEERS (cervezas artesanales)\n`;
 sql += `INSERT INTO beers (id, name, style, notes, image_id, visible, sort_order) VALUES\n`;
-sql += siteData.beers.items.map((beer, i) => 
-  `  ('${uuid()}', '${sqlEscape(beer.name)}', '${sqlEscape(beer.style)}', '${sqlEscape(beer.notes)}', ${beerImageIds[i]}, 1, ${i})`
-).join(',\n');
+sql += siteData.beers.items.map((beer, i) => {
+  const imageIdValue = beerImageIds[i] === null ? 'NULL' : `'${beerImageIds[i]}'`;
+  return `  ('${uuid()}', '${sqlEscape(beer.name)}', '${sqlEscape(beer.style)}', '${sqlEscape(beer.notes)}', ${imageIdValue}, 1, ${i})`;
+}).join(',\n');
 sql += `;\n`;
 
 // ============================================================
