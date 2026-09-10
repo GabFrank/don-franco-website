@@ -1,0 +1,166 @@
+---
+import siteData from '../content/site.json';
+
+const { title, items } = siteData.beers;
+const beers = items.filter((beer: any) => beer.name);
+---
+
+{beers.length > 0 && (
+  <section class="beer-section section-dark">
+    <div class="container">
+      <h2 class="section-title">{title}</h2>
+      
+      <div class="beer-scroll-container">
+        <div class="beer-cards">
+          {beers.map((beer: any) => (
+            <div class="beer-card">
+              <div class="beer-image">
+                {beer.image ? (
+                  <img src={beer.image} alt={beer.name} loading="lazy" />
+                ) : (
+                  <div class="beer-placeholder">
+                    <svg width="48" height="48" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20 6h-3V4c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM9 4h6v2H9V4zm11 16H4V8h3v2h2V8h6v2h2V8h3v12z"/>
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div class="beer-info">
+                <h3 class="beer-name">{beer.name}</h3>
+                <p class="beer-style">{beer.style}</p>
+                {beer.notes && <p class="beer-notes">{beer.notes}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .beer-section {
+    overflow: hidden;
+    padding: var(--space-16) 0;
+  }
+
+  @media (min-width: 768px) {
+    .beer-section {
+      padding: var(--space-24) 0;
+    }
+  }
+
+  .beer-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) var(--color-surface);
+  }
+
+  .beer-scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .beer-scroll-container::-webkit-scrollbar-track {
+    background: var(--color-surface);
+    border-radius: var(--radius-sm);
+  }
+
+  .beer-scroll-container::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: var(--radius-sm);
+  }
+
+  .beer-cards {
+    display: flex;
+    gap: var(--space-6);
+    padding: var(--space-2) 0;
+    min-width: min-content;
+  }
+
+  .beer-card {
+    flex: 0 0 280px;
+    background: var(--color-surface);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-base);
+  }
+
+  .beer-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .beer-image {
+    width: 100%;
+    height: 200px;
+    background: var(--color-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .beer-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .beer-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-muted);
+    background: var(--color-bg);
+  }
+
+  .beer-info {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .beer-name {
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--color-accent-2);
+    margin: 0;
+  }
+
+  .beer-style {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .beer-notes {
+    font-size: var(--text-base);
+    color: var(--color-muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (min-width: 768px) {
+    .beer-cards {
+      gap: var(--space-8);
+    }
+
+    .beer-card {
+      flex: 0 0 320px;
+    }
+
+    .beer-image {
+      height: 240px;
+    }
+  }
+</style>

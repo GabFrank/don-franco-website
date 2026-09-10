@@ -1,0 +1,114 @@
+{
+  "siteName": "Don Franco",
+  "tagline": "RESTAURANTE ARTESANAL",
+  "metaDescription": "Hamburguesas artesanales, cervezas caseras y parrilla en Salto del Guairá. Don Franco: donde la pasión por lo artesanal se encuentra con el sabor auténtico.",
+  "hero": {
+    "title": "DON FRANCO",
+    "tagline": "RESTAURANTE ARTESANAL",
+    "description": "Hamburguesas artesanales, cerveza casera y parrilla en Salto del Guairá.",
+    "ctaText": "VER MENÚ",
+    "carouselFolderUrl": "https://drive.google.com/drive/folders/1HenAdd-BOySFjUfUZ3V1MaN0SCeWSH6C",
+    "carouselLimit": 10,
+    "backgroundImages": [
+      "https://drive.google.com/file/d/1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL/view?usp=drive_link"
+    ],
+    "backgroundImageDuration": 5
+  },
+  "menu": {
+    "mode": "png",
+    "modes": {
+      "png": {
+        "enabled": true,
+        "source": "menu-pages.json"
+      },
+      "digital": {
+        "enabled": false,
+        "source": "menu-digital.json"
+      }
+    }
+  },
+  "story": {
+    "title": "NUESTRA HISTORIA",
+    "paragraphs": [
+      "Don Franco nace de nuestra pasión por lo artesanal.",
+      "Todo comenzó en 2018, cuando inauguramos en Salto del Guairá la primera fábrica de cerveza artesanal de la región. Lo que empezó como curiosidad se transformó en oficio: aprender, experimentar y crear productos hechos con tiempo, dedicación y personalidad.",
+      "En ese camino descubrimos que una buena cerveza siempre encuentra su mejor compañía en una gran comida. Así, en 2020 decidimos dar el siguiente paso y abrir Don Franco Restaurante.",
+      "Hoy combinamos esa misma filosofía artesanal en la cocina: hamburguesas autorales, cortes premium, porciones generosas, pizzas y sabores pensados para disfrutarse sin apuro."
+    ]
+  },
+  "gallery": {
+    "title": "GALERÍA",
+    "intro": "Conoce nuestro espacio y platos.",
+    "emptyMessage": "Próximamente agregaremos más fotos de nuestro restaurante.",
+    "fallbackImages": [
+      "1o5v0cSO0KT4q1Mt7uUh6-FOGOwsOWZSS",
+      "1UyhYjsNlt9nHPPWyzPrEkUjBa302YiWL"
+    ],
+    "folderUrl": "https://drive.google.com/drive/folders/1ZuJnBxiOMcAY5LirsBKXkksJueygO3fL",
+    "limit": 12
+  },
+  "reviews": {
+    "title": "LO QUE DICEN NUESTROS CLIENTES",
+    "placeId": "",
+    "rating": 4.8,
+    "reviewCount": 120,
+    "linkText": "Ver en Google Maps",
+    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9",
+    "quotes": [
+      {
+        "text": "Las mejores hamburguesas de la zona, y la cerveza artesanal es espectacular.",
+        "author": "Martín G."
+      },
+      {
+        "text": "Ambiente increíble y atención de primera. Volveremos seguro.",
+        "author": "Carolina R."
+      }
+    ]
+  },
+  "contact": {
+    "title": "CONTACTO",
+    "whatsappLabel": "WhatsApp",
+    "whatsappCta": "Escribinos",
+    "whatsapp": "595983327600",
+    "addressLabel": "Dirección",
+    "address": "Av. Paraguay c/ 30 de julio, Salto del Guairá, Paraguay",
+    "hoursLabel": "Horarios",
+    "hours": "Todos los días 17:00 - 00:00"
+  },
+  "map": {
+    "title": "CÓMO LLEGAR",
+    "embedUrl": "https://www.google.com/maps?q=Don+Franco+Salto+del+Guair%C3%A1&output=embed",
+    "fallbackLink": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9"
+  },
+  "footer": {
+    "tagline": "Restaurante Artesanal",
+    "mapsUrl": "https://maps.app.goo.gl/AcTKAKwEb1h9hc4K9",
+    "instagramUrl": "https://www.instagram.com/donfrancobs",
+    "facebookUrl": "https://www.facebook.com/donfrancobs",
+    "legalText": "Todos los derechos reservados."
+  },
+  "beers": {
+    "title": "Nuestras cervezas artesanales",
+    "items": [
+      {
+        "name": "IPA",
+        "style": "India Pale Ale",
+        "notes": "Amarga y aromática con notas cítricas",
+        "image": ""
+      },
+      {
+        "name": "Lager",
+        "style": "Cerveza clara",
+        "notes": "Suave y refrescante, perfecta para acompañar",
+        "image": ""
+      },
+      {
+        "name": "Stout",
+        "style": "Cerveza oscura",
+        "notes": "Cremosa con sabores tostados y chocolate",
+        "image": ""
+      }
+    ]
+  }
+}
