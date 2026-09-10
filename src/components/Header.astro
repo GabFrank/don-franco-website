@@ -66,9 +66,31 @@ const navLinks = [
     display: block;
   }
 
+  /* Desktop nav - hidden by default on mobile */
   .nav {
-    display: flex;
     gap: var(--space-8);
+    display: none;
+  }
+
+  /* Mobile hamburger - visible by default */
+  .mobile-menu-btn {
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+  }
+
+  /* Desktop breakpoint */
+  @media (min-width: 768px) {
+    .nav {
+      display: flex;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+    }
   }
 
   .nav-link {
@@ -98,15 +120,6 @@ const navLinks = [
 
   .nav-link:hover::after {
     width: 100%;
-  }
-
-  .mobile-menu-btn {
-    min-width: var(--touch-target);
-    min-height: var(--touch-target);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text);
   }
 
   .mobile-menu {
