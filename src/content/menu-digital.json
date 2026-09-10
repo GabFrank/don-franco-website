@@ -1,0 +1,149 @@
+{
+  "categories": [
+    {
+      "id": "hamburguesas",
+      "name": "Hamburguesas",
+      "description": "Burgers artesanales con carne premium 100% paraguaya",
+      "items": [
+        {
+          "id": "classic",
+          "name": "Don Franco Classic",
+          "description": "Medallon de carne 180g, queso cheddar, lechuga, tomate, cebolla caramelizada, salsa especial",
+          "price": 45000,
+          "currency": "Gs."
+        },
+        {
+          "id": "bacon-bbq",
+          "name": "Bacon BBQ",
+          "description": "Medallon de carne 180g, bacon crispy, queso cheddar, cebolla frita, salsa BBQ casera",
+          "price": 52000,
+          "currency": "Gs."
+        },
+        {
+          "id": "craft-burger",
+          "name": "Craft Burger",
+          "description": "Doble medallon 360g, queso azul, rúcula, tomate seco, cebolla caramelizada, reducción balsámica",
+          "price": 68000,
+          "currency": "Gs.",
+          "badge": "Premium"
+        }
+      ]
+    },
+    {
+      "id": "pizzas",
+      "name": "Pizzas",
+      "description": "Masa artesanal fermentada 48hs",
+      "items": [
+        {
+          "id": "margherita",
+          "name": "Margherita",
+          "description": "Salsa de tomate, mozzarella, albahaca fresca, aceite de oliva",
+          "price": 38000,
+          "currency": "Gs."
+        },
+        {
+          "id": "pepperoni",
+          "name": "Pepperoni",
+          "description": "Salsa de tomate, mozzarella, pepperoni italiano",
+          "price": 42000,
+          "currency": "Gs."
+        },
+        {
+          "id": "cuatro-quesos",
+          "name": "Cuatro Quesos",
+          "description": "Mozzarella, gorgonzola, provolone, parmesano",
+          "price": 48000,
+          "currency": "Gs."
+        }
+      ]
+    },
+    {
+      "id": "cortes",
+      "name": "Cortes Premium",
+      "description": "Carnes seleccionadas a la parrilla",
+      "items": [
+        {
+          "id": "bife-chorizo",
+          "name": "Bife de Chorizo",
+          "description": "300g, con guarnición de papas rústicas y ensalada",
+          "price": 85000,
+          "currency": "Gs.",
+          "badge": "Premium"
+        },
+        {
+          "id": "entraña",
+          "name": "Entraña",
+          "description": "350g, marinada con chimichurri, papas y ensalada",
+          "price": 75000,
+          "currency": "Gs."
+        }
+      ]
+    },
+    {
+      "id": "bebidas",
+      "name": "Bebidas",
+      "description": "Cervezas artesanales y más",
+      "items": [
+        {
+          "id": "cerveza-ipa",
+          "name": "Cerveza Artesanal IPA",
+          "description": "Don Franco Brewery - 500ml",
+          "price": 22000,
+          "currency": "Gs.",
+          "badge": "Artesanal"
+        },
+        {
+          "id": "cerveza-lager",
+          "name": "Cerveza Artesanal Lager",
+          "description": "Don Franco Brewery - 500ml",
+          "price": 20000,
+          "currency": "Gs.",
+          "badge": "Artesanal"
+        },
+        {
+          "id": "cerveza-stout",
+          "name": "Cerveza Artesanal Stout",
+          "description": "Don Franco Brewery - 500ml",
+          "price": 24000,
+          "currency": "Gs.",
+          "badge": "Artesanal"
+        },
+        {
+          "id": "agua",
+          "name": "Agua Mineral",
+          "description": "500ml",
+          "price": 8000,
+          "currency": "Gs."
+        },
+        {
+          "id": "gaseosa",
+          "name": "Gaseosa",
+          "description": "Coca-Cola, Sprite, Fanta - 500ml",
+          "price": 10000,
+          "currency": "Gs."
+        }
+      ]
+    },
+    {
+      "id": "postres",
+      "name": "Postres",
+      "description": "El cierre perfecto",
+      "items": [
+        {
+          "id": "brownie",
+          "name": "Brownie con Helado",
+          "description": "Brownie casero con helado de vainilla y salsa de chocolate",
+          "price": 25000,
+          "currency": "Gs."
+        },
+        {
+          "id": "flan",
+          "name": "Flan Casero",
+          "description": "Con dulce de leche",
+          "price": 18000,
+          "currency": "Gs."
+        }
+      ]
+    }
+  ]
+}

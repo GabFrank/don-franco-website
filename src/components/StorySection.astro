@@ -1,37 +1,49 @@
 ---
-interface Props {
-  title?: string;
-  paragraphs?: string[];
-}
-const { title = "NUESTRA HISTORIA", paragraphs = [] } = Astro.props;
+import siteData from '../content/site.json';
+
+const { title, paragraphs } = siteData.story;
 ---
-<section id="historia" class="story-section" aria-labelledby="historia-heading">
+
+<section id="historia" class="section">
   <div class="container">
-    <h2 id="historia-heading" class="section-title">{title}</h2>
+    <h2 class="section-title">{title}</h2>
+    
     <div class="story-content">
-      {paragraphs.length > 0 ? paragraphs.map((text) => <p>{text}</p>) : (
-        <p>Don Franco nace del amor por la parrilla y la cocina artesanal.</p>
-      )}
+      {paragraphs.map((paragraph: string) => (
+        <p class="story-paragraph">{paragraph}</p>
+      ))}
+    </div>
+
+    <div class="story-badge">
+      <span class="badge">Desde 2018</span>
     </div>
   </div>
 </section>
 
 <style>
-  .story-section {
-    background: var(--color-surface);
-  }
-  .section-title {
-    font-family: var(--font-title);
-    font-size: clamp(2rem, 5vw, 2.75rem);
-    letter-spacing: 0.05em;
-    color: var(--color-text);
-    margin-bottom: var(--space-6);
-  }
   .story-content {
-    max-width: 42rem;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
-  .story-content p {
+
+  .story-paragraph {
+    font-size: var(--text-lg);
+    line-height: 1.8;
     color: var(--color-muted);
-    margin-bottom: var(--space-4);
+    text-align: center;
+  }
+
+  .story-badge {
+    margin-top: var(--space-8);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .story-paragraph {
+      font-size: var(--text-xl);
+    }
   }
 </style>
