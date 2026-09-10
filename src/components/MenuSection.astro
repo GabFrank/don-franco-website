@@ -152,7 +152,7 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
   .menu-preview-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(26, 22, 20, 0.9) 0%, transparent 100%);
+    background: linear-gradient(to top, rgba(26, 22, 20, 0.95) 0%, rgba(26, 22, 20, 0.8) 50%, transparent 100%);
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -163,6 +163,13 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
 
   .menu-preview-card:hover .menu-preview-overlay {
     opacity: 1;
+  }
+
+  .menu-preview-overlay .btn {
+    background: var(--color-accent);
+    color: var(--color-text);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-lg);
   }
 
   .menu-spotlight {
