@@ -10,7 +10,7 @@ const currentYear = new Date().getFullYear();
   <div class="container">
     <div class="footer-content">
       <div class="footer-brand">
-        <img src="/logo.svg" alt="Don Franco" width="140" height="47" class="footer-logo" />
+        <img src="/logo.png" alt="Don Franco" width="140" height="155" class="footer-logo" />
         <p class="footer-tagline">{tagline}</p>
       </div>
 
@@ -110,8 +110,9 @@ const currentYear = new Date().getFullYear();
 
   .footer-logo {
     display: block;
-    max-width: 100%;
+    max-width: 140px;
     height: auto;
+    object-fit: contain;
   }
 
   .footer-tagline {

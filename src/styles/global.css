@@ -10,6 +10,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
   max-width: 100%;
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 88px;
 }
 
 body {
@@ -25,7 +27,11 @@ body {
 
 @media (max-width: 767px) {
   body {
-    padding-bottom: calc(68px + env(safe-area-inset-bottom));
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+  
+  html {
+    scroll-padding-bottom: calc(88px + env(safe-area-inset-bottom));
   }
 }
 
@@ -86,6 +92,7 @@ button {
 
 .section {
   padding: var(--section-spacing) 0;
+  scroll-margin-top: 80px;
 }
 
 .section-light {
