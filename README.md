@@ -32,6 +32,7 @@ La salida queda en `dist/`.
 
 ## Documentación
 
+- **[✨ V2 Implementation Review](docs/V2-IMPLEMENTATION-REVIEW.md)** — Complete technical review of the Astro 7 greenfield rewrite (cream-first Brewery Ember theme, menu modes, component architecture, deployment guide)
 - [Requisitos y guía técnica](docs/PROJECT_REQUIREMENTS.md)
 - [Runbook: actualización de contenido](docs/CONTENT_UPDATE_RUNBOOK.md)
 - [Deploy en DigitalOcean](ops/deploy/README.md)
