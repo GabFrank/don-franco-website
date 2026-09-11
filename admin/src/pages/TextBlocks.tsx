@@ -166,6 +166,53 @@ function TextBlocks() {
               </tbody>
             </table>
           </div>
+
+          <div className="mobile-card-list">
+            {blocks.map((block) => (
+              <div key={block.id} className={`mobile-card-item ${block.visible === 0 ? 'item-hidden' : ''}`}>
+                <div className="mobile-card-row">
+                  <span className="mobile-card-label">Key</span>
+                  <code className="mobile-card-value">{block.key}</code>
+                </div>
+                
+                <div className="mobile-card-row">
+                  <span className="mobile-card-label">Contenido</span>
+                  <span className="mobile-card-value">{block.body.substring(0, 80)}{block.body.length > 80 ? '...' : ''}</span>
+                </div>
+                
+                <div className="mobile-card-row">
+                  <span className="mobile-card-label">Estado</span>
+                  <div>
+                    {block.visible === 1 ? (
+                      <span className="badge badge-visible">Visible</span>
+                    ) : (
+                      <span className="badge badge-hidden">Oculto</span>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="mobile-card-row">
+                  <span className="mobile-card-label">Orden</span>
+                  <span className="mobile-card-value">{block.sort_order}</span>
+                </div>
+                
+                <div className="mobile-card-actions">
+                  <button className="btn btn-secondary" onClick={() => handleEdit(block)}>
+                    Editar
+                  </button>
+                  <button 
+                    className={block.visible ? 'btn btn-secondary' : 'btn btn-success'}
+                    onClick={() => handleToggleVisible(block)}
+                  >
+                    {block.visible ? '👁️ Ocultar' : '👁️ Mostrar'}
+                  </button>
+                  <button className="btn btn-danger" onClick={() => handleDelete(block, false)}>
+                    🗑️ Eliminar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ))}
 

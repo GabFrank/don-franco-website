@@ -196,55 +196,112 @@ function Publish() {
             <p>No hay publicaciones previas</p>
           </div>
         ) : (
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Fecha y Hora</th>
-                <th>Usuario</th>
-                <th>Estado</th>
-                <th>Duración</th>
-                <th>Detalles</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            <div className="table-wrapper">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Fecha y Hora</th>
+                    <th>Usuario</th>
+                    <th>Estado</th>
+                    <th>Duración</th>
+                    <th>Detalles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {logs.map(log => (
+                    <tr key={log.id}>
+                      <td>
+                        {new Date(log.created_at * 1000).toLocaleString('es-PY')}
+                      </td>
+                      <td>{log.user_email}</td>
+                      <td>
+                        <span className={getStatusBadgeClass(log.status)}>
+                          {getStatusText(log.status)}
+                        </span>
+                      </td>
+                      <td>
+                        {formatDuration(log.created_at, log.completed_at)}
+                      </td>
+                      <td>
+                        {log.webhook_response && (
+                          <details>
+                            <summary style={{ cursor: 'pointer', color: 'var(--accent)' }}>
+                              Ver respuesta
+                            </summary>
+                            <pre style={{ 
+                              fontSize: '0.75rem', 
+                              backgroundColor: 'var(--bg-primary)', 
+                              padding: '0.5rem',
+                              borderRadius: '4px',
+                              marginTop: '0.5rem',
+                              overflow: 'auto',
+                              maxHeight: '200px',
+                            }}>
+                              {JSON.stringify(JSON.parse(log.webhook_response), null, 2)}
+                            </pre>
+                          </details>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mobile-card-list">
               {logs.map(log => (
-                <tr key={log.id}>
-                  <td>
-                    {new Date(log.created_at * 1000).toLocaleString('es-PY')}
-                  </td>
-                  <td>{log.user_email}</td>
-                  <td>
-                    <span className={getStatusBadgeClass(log.status)}>
-                      {getStatusText(log.status)}
+                <div key={log.id} className="mobile-card-item">
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Fecha y Hora</span>
+                    <span className="mobile-card-value">
+                      {new Date(log.created_at * 1000).toLocaleString('es-PY')}
                     </span>
-                  </td>
-                  <td>
-                    {formatDuration(log.created_at, log.completed_at)}
-                  </td>
-                  <td>
-                    {log.webhook_response && (
-                      <details>
-                        <summary style={{ cursor: 'pointer', color: 'var(--accent)' }}>
-                          Ver respuesta
-                        </summary>
-                        <pre style={{ 
-                          fontSize: '0.75rem', 
-                          backgroundColor: 'var(--bg-primary)', 
-                          padding: '0.5rem',
-                          borderRadius: '4px',
-                          marginTop: '0.5rem',
-                          overflow: 'auto',
-                          maxHeight: '200px',
-                        }}>
-                          {JSON.stringify(JSON.parse(log.webhook_response), null, 2)}
-                        </pre>
-                      </details>
-                    )}
-                  </td>
-                </tr>
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Usuario</span>
+                    <span className="mobile-card-value">{log.user_email}</span>
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Estado</span>
+                    <div>
+                      <span className={getStatusBadgeClass(log.status)}>
+                        {getStatusText(log.status)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Duración</span>
+                    <span className="mobile-card-value">
+                      {formatDuration(log.created_at, log.completed_at)}
+                    </span>
+                  </div>
+                  
+                  {log.webhook_response && (
+                    <details style={{ marginTop: '0.5rem' }}>
+                      <summary style={{ cursor: 'pointer', color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 600 }}>
+                        Ver respuesta
+                      </summary>
+                      <pre style={{ 
+                        fontSize: '0.75rem', 
+                        backgroundColor: 'var(--bg-primary)', 
+                        padding: '0.5rem',
+                        borderRadius: '4px',
+                        marginTop: '0.5rem',
+                        overflow: 'auto',
+                        maxHeight: '200px',
+                      }}>
+                        {JSON.stringify(JSON.parse(log.webhook_response), null, 2)}
+                      </pre>
+                    </details>
+                  )}
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 
