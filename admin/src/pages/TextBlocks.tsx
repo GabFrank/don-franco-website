@@ -121,49 +121,51 @@ function TextBlocks() {
         <div key={section} className="card" style={{ marginBottom: '2rem' }}>
           <h2 style={{ marginBottom: '1rem', textTransform: 'capitalize' }}>{section}</h2>
           
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Key</th>
-                <th>Contenido</th>
-                <th>Estado</th>
-                <th>Orden</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {blocks.map((block) => (
-                <tr key={block.id} className={block.visible === 0 ? 'item-hidden' : ''}>
-                  <td><code>{block.key}</code></td>
-                  <td>{block.body.substring(0, 60)}{block.body.length > 60 ? '...' : ''}</td>
-                  <td>
-                    {block.visible === 1 ? (
-                      <span className="badge badge-visible">Visible</span>
-                    ) : (
-                      <span className="badge badge-hidden">Oculto</span>
-                    )}
-                  </td>
-                  <td>{block.sort_order}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn btn-secondary" onClick={() => handleEdit(block)}>
-                        Editar
-                      </button>
-                      <button 
-                        className={block.visible ? 'btn btn-secondary' : 'btn btn-success'}
-                        onClick={() => handleToggleVisible(block)}
-                      >
-                        {block.visible ? '👁️ Ocultar' : '👁️ Mostrar'}
-                      </button>
-                      <button className="btn btn-danger" onClick={() => handleDelete(block, false)}>
-                        🗑️
-                      </button>
-                    </div>
-                  </td>
+          <div className="table-wrapper">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Contenido</th>
+                  <th>Estado</th>
+                  <th>Orden</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {blocks.map((block) => (
+                  <tr key={block.id} className={block.visible === 0 ? 'item-hidden' : ''}>
+                    <td><code>{block.key}</code></td>
+                    <td>{block.body.substring(0, 60)}{block.body.length > 60 ? '...' : ''}</td>
+                    <td>
+                      {block.visible === 1 ? (
+                        <span className="badge badge-visible">Visible</span>
+                      ) : (
+                        <span className="badge badge-hidden">Oculto</span>
+                      )}
+                    </td>
+                    <td>{block.sort_order}</td>
+                    <td>
+                      <div className="action-buttons">
+                        <button className="btn btn-secondary" onClick={() => handleEdit(block)}>
+                          Editar
+                        </button>
+                        <button 
+                          className={block.visible ? 'btn btn-secondary' : 'btn btn-success'}
+                          onClick={() => handleToggleVisible(block)}
+                        >
+                          {block.visible ? '👁️ Ocultar' : '👁️ Mostrar'}
+                        </button>
+                        <button className="btn btn-danger" onClick={() => handleDelete(block, false)}>
+                          🗑️
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       ))}
 

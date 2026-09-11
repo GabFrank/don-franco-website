@@ -10,12 +10,22 @@ function Beers() {
   const [editingBeer, setEditingBeer] = useState<Beer | null>(null);
   const [uploading, setUploading] = useState(false);
 
-  const resolveImageSrc = (r2Key: string | undefined): string => {
-    if (!r2Key) return '/media/placeholder.jpg';
-    if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
-      return r2Key;
+  const resolveImageSrc = (beer: Beer): string | null => {
+    const r2Key = (beer as any).image_r2_key || beer.image?.r2_key;
+    
+    if (r2Key) {
+      if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
+        return r2Key;
+      }
+      return `/media/${r2Key}`;
     }
-    return `/media/${r2Key}`;
+    
+    if (beer.name) {
+      const fallbackSvg = `/beers/${beer.name.toLowerCase().replace(/\s+/g, '-')}.svg`;
+      return fallbackSvg;
+    }
+    
+    return null;
   };
   
   const [formData, setFormData] = useState({
@@ -157,27 +167,35 @@ function Beers() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
         {beers.map(beer => (
           <div key={beer.id} className={`card ${beer.visible === 0 ? 'item-hidden' : ''}`}>
-            {beer.image_id ? (
-              <img 
-                src={resolveImageSrc(beer.image?.r2_key)} 
-                alt={beer.name}
-                style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
-              />
-            ) : (
-              <div style={{ 
-                width: '100%', 
-                height: '200px', 
-                backgroundColor: 'var(--border)', 
-                borderRadius: '4px', 
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-secondary)'
-              }}>
-                Sin imagen
-              </div>
-            )}
+            {(() => {
+              const imgSrc = resolveImageSrc(beer);
+              return imgSrc ? (
+                <img 
+                  src={imgSrc} 
+                  alt={beer.name}
+                  style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const placeholder = target.nextElementSibling as HTMLElement;
+                    if (placeholder) placeholder.style.display = 'flex';
+                  }}
+                />
+              ) : null;
+            })()}
+            <div style={{ 
+              display: resolveImageSrc(beer) ? 'none' : 'flex',
+              width: '100%', 
+              height: '200px', 
+              backgroundColor: 'var(--border)', 
+              borderRadius: '4px', 
+              marginBottom: '1rem',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-secondary)'
+            }}>
+              🍺
+            </div>
             
             <h3 style={{ marginBottom: '0.5rem' }}>{beer.name}</h3>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>{beer.style || 'Sin estilo'}</p>
@@ -272,23 +290,26 @@ function Beers() {
                 {uploadedImage && (
                   <div style={{ marginTop: '0.5rem' }}>
                     <img 
-                      src={resolveImageSrc(uploadedImage.r2_key)} 
+                      src={uploadedImage.r2_key.startsWith('/') ? uploadedImage.r2_key : `/media/${uploadedImage.r2_key}`}
                       alt="Preview"
                       className="image-preview"
                     />
                     <p style={{ fontSize: '0.875rem', color: 'var(--success)' }}>✓ Imagen subida</p>
                   </div>
                 )}
-                {editingBeer?.image?.r2_key && !uploadedImage && (
-                  <div style={{ marginTop: '0.5rem' }}>
-                    <img 
-                      src={resolveImageSrc(editingBeer.image.r2_key)} 
-                      alt="Current"
-                      className="image-preview"
-                    />
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Imagen actual</p>
-                  </div>
-                )}
+                {editingBeer && !uploadedImage && (() => {
+                  const currentImgSrc = resolveImageSrc(editingBeer);
+                  return currentImgSrc ? (
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <img 
+                        src={currentImgSrc}
+                        alt="Current"
+                        className="image-preview"
+                      />
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Imagen actual</p>
+                    </div>
+                  ) : null;
+                })()}
               </div>
 
               <div className="form-group">
