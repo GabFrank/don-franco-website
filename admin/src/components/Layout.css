@@ -1,6 +1,50 @@
 .layout {
   display: flex;
   min-height: 100vh;
+  position: relative;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background-color: var(--ember);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  min-width: 48px;
+  min-height: 48px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+}
+
+.mobile-menu-toggle:hover {
+  background-color: #d14d00;
+  transform: scale(1.05);
+}
+
+.mobile-menu-toggle:active {
+  transform: scale(0.95);
+}
+
+.hamburger-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
 .sidebar {
@@ -11,6 +55,8 @@
   position: fixed;
   height: 100vh;
   overflow-y: auto;
+  z-index: 900;
+  transition: transform 0.3s ease;
 }
 
 .sidebar-header {
@@ -41,7 +87,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 1.5rem;
+  min-height: 48px;
   color: var(--cream);
   text-decoration: none;
   transition: all 0.2s;
@@ -71,16 +118,55 @@
   flex: 1;
   margin-left: 250px;
   padding: 2rem;
+  width: calc(100% - 250px);
+}
+
+@media (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar.sidebar-open ~ .main-content {
+    pointer-events: none;
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 4rem 1rem 1rem;
+    width: 100%;
+  }
 }
 
 @media (max-width: 768px) {
+  .main-content {
+    padding: 4rem 1rem 1rem;
+  }
+
+  .nav-item {
+    padding: 1rem 1.5rem;
+    min-height: 52px;
+  }
+}
+
+@media (max-width: 390px) {
   .sidebar {
     width: 100%;
-    height: auto;
-    position: relative;
   }
-  
+
   .main-content {
-    margin-left: 0;
+    padding: 4rem 0.75rem 0.75rem;
   }
 }
