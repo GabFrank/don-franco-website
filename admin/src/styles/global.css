@@ -62,6 +62,7 @@ input, textarea, select {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  min-height: 44px;
 }
 
 .btn:hover {
@@ -187,6 +188,28 @@ input, textarea, select {
 .table {
   width: 100%;
   border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.875rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.5rem;
+  }
+
+  .table td > div {
+    flex-wrap: wrap;
+  }
+
+  .table td button {
+    min-width: 44px;
+    padding: 0.625rem 0.75rem;
+  }
 }
 
 .table th {
@@ -281,6 +304,14 @@ input, textarea, select {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
+    max-height: 85vh;
+  }
+}
+
 .modal-header {
   margin-bottom: 1.5rem;
 }
@@ -296,6 +327,18 @@ input, textarea, select {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .modal-footer {
+    flex-direction: column;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+  }
 }
 
 .empty-state {

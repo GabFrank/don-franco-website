@@ -504,6 +504,138 @@ Pages deploy:
 
 ---
 
+## Configuración de rutas Admin SPA
+
+### Estructura de archivos
+
+El panel de administración es una Single Page Application (SPA) de React que vive en `/admin` y se construye separadamente del sitio público Astro.
+
+```
+/workspace/
+├── admin/                          # React SPA
+│   ├── src/
+│   │   ├── main.tsx               # Entry point con basename="/admin"
+│   │   ├── App.tsx                # React Router routes
+│   │   └── components/Layout.tsx  # Sidebar responsive
+│   ├── vite.config.ts             # base: '/admin/', outDir: '../public/admin'
+│   └── index.html                 # Template HTML
+├── public/
+│   ├── _redirects                 # Cloudflare Pages redirects
+│   └── _routes.json               # Cloudflare Pages routing config
+└── dist/                          # Output after build
+    └── admin/                     # Admin SPA built files
+```
+
+### Configuración de enrutamiento
+
+**1. Vite config (`admin/vite.config.ts`)**
+
+```typescript
+export default defineConfig({
+  plugins: [react()],
+  base: '/admin/',                  // Base path para assets
+  build: {
+    outDir: '../public/admin',      // Output a public/admin
+    emptyOutDir: true,
+  },
+});
+```
+
+**2. React Router (`admin/src/main.tsx`)**
+
+```typescript
+<BrowserRouter basename="/admin">
+  <App />
+</BrowserRouter>
+```
+
+**3. Cloudflare Pages redirects (`public/_redirects`)**
+
+```
+# Handle React Router for admin panel
+/admin/* /admin/index.html 200
+```
+
+**4. Cloudflare Pages routes (`public/_routes.json`)**
+
+```json
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/admin/assets/*"
+  ]
+}
+```
+
+### Rutas disponibles
+
+Todas estas rutas deben funcionar correctamente:
+
+- `/admin/` - Dashboard
+- `/admin/textos` - Bloques de texto
+- `/admin/menu` - Menú digital y carta PNG
+- `/admin/cervezas` - Gestión de cervezas
+- `/admin/galeria` - Galería de imágenes
+- `/admin/resenas` - Reseñas
+- `/admin/contacto` - Información de contacto
+- `/admin/publicar` - Panel de publicación
+
+### Diseño responsive
+
+**Desktop (≥1280px):**
+- Sidebar fijo de 250px
+- Contenido principal con margen izquierdo
+
+**Tablet (768px - 1024px):**
+- Hamburger menu (☰) en esquina superior izquierda
+- Sidebar oculto por defecto, se desliza desde la izquierda al hacer clic
+- Overlay semi-transparente cuando sidebar está abierto
+
+**Mobile (≤767px):**
+- Hamburger menu con botón de 48px (touch target)
+- Sidebar en ancho completo cuando está abierto
+- Tablas con scroll horizontal si es necesario
+- Botones modales apilados verticalmente
+- Touch targets mínimos de 44px en todos los controles
+
+### Troubleshooting
+
+**Problema:** Rutas como `/admin/textos` muestran el landing page público en vez del admin
+
+**Causa:** Falta configuración de `_routes.json` o el archivo `_redirects` no se está copiando a `dist/`
+
+**Solución:**
+1. Verificar que `public/_routes.json` existe
+2. Verificar que `public/_redirects` existe
+3. Rebuildar: `npm run build`
+4. Confirmar que ambos archivos están en `dist/`:
+   ```bash
+   ls -la dist/_redirects dist/_routes.json
+   ```
+
+**Problema:** Assets del admin no cargan (CSS/JS 404)
+
+**Causa:** El `base` de Vite no coincide con el `basename` de React Router
+
+**Solución:**
+1. Verificar `admin/vite.config.ts`: `base: '/admin/'`
+2. Verificar `admin/src/main.tsx`: `basename="/admin"`
+3. Ambos deben terminar en `/admin` (sin trailing slash en basename, con trailing slash en base)
+
+**Problema:** Sidebar ocupa toda la pantalla en mobile
+
+**Causa:** CSS responsive no aplicado correctamente
+
+**Solución:**
+1. Verificar que `admin/src/components/Layout.tsx` tiene el state `isMobileMenuOpen`
+2. Verificar que `admin/src/components/Layout.css` tiene los media queries
+3. Reconstruir: `cd admin && npm run build` (si estás en workspace raíz: `npm run build:admin`)
+
+---
+
 ## Referencias
 
 - **Phase 2 Runbook:** `docs/planes/PHASE2-ADMIN-RUNBOOK.md` (API `/api/public/content`)
