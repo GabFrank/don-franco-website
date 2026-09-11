@@ -512,18 +512,26 @@ El panel de administración es una Single Page Application (SPA) de React que vi
 
 ```
 /workspace/
-├── admin/                          # React SPA
+├── admin/
 │   ├── src/
 │   │   ├── main.tsx               # Entry point con basename="/admin"
 │   │   ├── App.tsx                # React Router routes
 │   │   └── components/Layout.tsx  # Sidebar responsive
 │   ├── vite.config.ts             # base: '/admin/', outDir: '../public/admin'
+│   ├── copy-routes.js             # Post-build: copia index.html a subdirectorios
 │   └── index.html                 # Template HTML
 ├── public/
-│   ├── _redirects                 # Cloudflare Pages redirects
-│   └── _routes.json               # Cloudflare Pages routing config
+│   ├── _redirects                 # Cloudflare Pages SPA fallback
+│   └── _routes.json               # Cloudflare Pages: solo Functions
 └── dist/                          # Output after build
-    └── admin/                     # Admin SPA built files
+    ├── admin/
+    │   ├── index.html             # SPA root
+    │   ├── textos/index.html      # ⚠️ Generado por copy-routes.js
+    │   ├── menu/index.html        # ⚠️ Generado por copy-routes.js
+    │   ├── cervezas/index.html    # ⚠️ Generado por copy-routes.js
+    │   └── ...                    # Uno por cada ruta SPA
+    ├── _redirects
+    └── _routes.json
 ```
 
 ### Configuración de enrutamiento
@@ -549,24 +557,55 @@ export default defineConfig({
 </BrowserRouter>
 ```
 
-**3. Cloudflare Pages redirects (`public/_redirects`)**
+**3. Cloudflare Pages routes (`public/_routes.json`)**
 
-```
-# Handle React Router for admin panel
-/admin/* /admin/index.html 200
-```
-
-**4. Cloudflare Pages routes (`public/_routes.json`)**
+⚠️ **CRÍTICO:** `_routes.json` debe incluir **SOLO** las rutas de Functions, no `/*`:
 
 ```json
 {
   "version": 1,
   "include": [
-    "/*"
+    "/api/*",
+    "/media/*"
   ],
-  "exclude": [
-    "/admin/assets/*"
-  ]
+  "exclude": []
+}
+```
+
+**¿Por qué?** Si incluyes `"/*"`, Cloudflare Pages rompe los rewrites del SPA y sirve 404s en navegación directa.
+
+**4. Cloudflare Pages redirects (`public/_redirects`)**
+
+```
+# Fallback SPA para navegación client-side
+/admin/* /admin/index.html 200
+```
+
+**5. Build step: copiar index.html a subdirectorios (`admin/copy-routes.js`)**
+
+⚠️ **ESENCIAL:** `_redirects` solo funciona para navegación client-side en algunos contextos de CF Pages. Para garantizar que navegación directa a `/admin/textos` funcione, copiamos `index.html` a cada subdirectorio:
+
+```javascript
+// admin/copy-routes.js
+const ADMIN_ROUTES = [
+  'textos', 'menu', 'cervezas', 'galeria', 
+  'resenas', 'contacto', 'publicar'
+];
+
+ADMIN_ROUTES.forEach(route => {
+  const routeDir = join(outDir, route);
+  mkdirSync(routeDir, { recursive: true });
+  copyFileSync(sourceIndexPath, join(routeDir, 'index.html'));
+});
+```
+
+Se ejecuta automáticamente como parte de `npm run build:admin` en `package.json`:
+
+```json
+{
+  "scripts": {
+    "build:admin": "cd admin && vite build && node copy-routes.js"
+  }
 }
 ```
 
@@ -582,6 +621,21 @@ Todas estas rutas deben funcionar correctamente:
 - `/admin/resenas` - Reseñas
 - `/admin/contacto` - Información de contacto
 - `/admin/publicar` - Panel de publicación
+
+**Verificación post-build:**
+
+```bash
+npm run build
+
+# Debe producir:
+# dist/admin/index.html          ✅
+# dist/admin/textos/index.html   ✅
+# dist/admin/menu/index.html     ✅
+# dist/admin/cervezas/index.html ✅
+# ... (uno por cada ruta)
+# dist/_routes.json              ✅ (solo /api/*, /media/*)
+# dist/_redirects                ✅ (/admin/* → /admin/index.html 200)
+```
 
 ### Diseño responsive
 
@@ -605,15 +659,29 @@ Todas estas rutas deben funcionar correctamente:
 
 **Problema:** Rutas como `/admin/textos` muestran el landing page público en vez del admin
 
-**Causa:** Falta configuración de `_routes.json` o el archivo `_redirects` no se está copiando a `dist/`
+**Causa 1:** `_routes.json` tiene `include: ["/*"]` en vez de solo Functions
 
 **Solución:**
-1. Verificar que `public/_routes.json` existe
-2. Verificar que `public/_redirects` existe
-3. Rebuildar: `npm run build`
-4. Confirmar que ambos archivos están en `dist/`:
+1. Verificar `public/_routes.json`:
+   ```json
+   {
+     "version": 1,
+     "include": ["/api/*", "/media/*"],
+     "exclude": []
+   }
+   ```
+2. Rebuildar: `npm run build`
+
+**Causa 2:** `copy-routes.js` no se ejecutó o falló
+
+**Solución:**
+1. Verificar que `dist/admin/textos/index.html` existe:
    ```bash
-   ls -la dist/_redirects dist/_routes.json
+   ls -la dist/admin/*/index.html
+   ```
+2. Si faltan, ejecutar manualmente:
+   ```bash
+   cd admin && node copy-routes.js
    ```
 
 **Problema:** Assets del admin no cargan (CSS/JS 404)
@@ -621,9 +689,18 @@ Todas estas rutas deben funcionar correctamente:
 **Causa:** El `base` de Vite no coincide con el `basename` de React Router
 
 **Solución:**
-1. Verificar `admin/vite.config.ts`: `base: '/admin/'`
-2. Verificar `admin/src/main.tsx`: `basename="/admin"`
-3. Ambos deben terminar en `/admin` (sin trailing slash en basename, con trailing slash en base)
+1. Verificar `admin/vite.config.ts`: `base: '/admin/'` (con trailing slash)
+2. Verificar `admin/src/main.tsx`: `basename="/admin"` (sin trailing slash)
+3. Ambos deben apuntar a `/admin`
+
+**Problema:** Build falla con "Cannot find module 'copy-routes.js'"
+
+**Causa:** El script se ejecuta desde el directorio `admin/` pero Node no lo encuentra
+
+**Solución:**
+1. Verificar que `admin/copy-routes.js` existe
+2. Verificar que tiene permisos de lectura: `chmod +r admin/copy-routes.js`
+3. El script se ejecuta desde `package.json` como: `cd admin && node copy-routes.js`
 
 **Problema:** Sidebar ocupa toda la pantalla en mobile
 
@@ -632,7 +709,7 @@ Todas estas rutas deben funcionar correctamente:
 **Solución:**
 1. Verificar que `admin/src/components/Layout.tsx` tiene el state `isMobileMenuOpen`
 2. Verificar que `admin/src/components/Layout.css` tiene los media queries
-3. Reconstruir: `cd admin && npm run build` (si estás en workspace raíz: `npm run build:admin`)
+3. Reconstruir: `npm run build:admin`
 
 ---
 
