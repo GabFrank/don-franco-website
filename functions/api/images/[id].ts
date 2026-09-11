@@ -22,7 +22,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
 export const onRequestPut: PagesFunction<Env> = async (context) => {
   return handleUpdateById(context, {
     tableName: 'images',
-    updateableFields: ['alt', 'title', 'visible', 'sort_order'],
+    updateableFields: ['alt', 'title', 'visible', 'sort_order', 'r2_key', 'section'],
   });
 };
 

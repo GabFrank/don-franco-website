@@ -429,6 +429,8 @@ Sube un archivo a R2. **Requiere autenticación.**
 }
 ```
 
+**Acceso a archivos:** Los archivos subidos están disponibles mediante el proxy `/media/<r2_key>`. Las claves anidadas (ej: `images/hero/background.jpg`) funcionan correctamente en `/media/images/hero/background.jpg`.
+
 ---
 
 ## Códigos de Estado HTTP

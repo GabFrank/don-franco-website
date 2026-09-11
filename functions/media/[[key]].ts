@@ -1,7 +1,8 @@
 /**
  * Proxy para servir archivos de R2
- * GET /media/:key
+ * GET /media/*
  * 
+ * Catch-all route para servir archivos con múltiples segmentos (ej: /media/images/foo.png)
  * Valida que el objeto pertenece a contenido visible antes de servir
  * (para MVP - puede servir sin validación y confiar en URLs privadas)
  */
@@ -12,7 +13,9 @@ import { jsonResponse } from '../_shared/db-helpers';
 export const onRequestGet: PagesFunction<Env> = async (context) => {
   const { env, params } = context;
 
-  const key = params.key as string;
+  const keyParam = params.key;
+  const key = Array.isArray(keyParam) ? keyParam.join('/') : keyParam as string;
+  
   if (!key) {
     return jsonResponse({ error: 'Missing key parameter' }, 400);
   }
