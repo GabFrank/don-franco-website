@@ -14,6 +14,7 @@ export interface Env {
   ACCESS_TEAM_DOMAIN?: string;
   ENVIRONMENT?: string;
   ADMIN_DEV_BYPASS_SECRET?: string;
+  ADMIN_API_TOKEN?: string;
   CF_PAGES_DEPLOY_HOOK_URL?: string;
 }
 
@@ -24,16 +25,32 @@ export interface AuthResult {
 }
 
 /**
- * Validate Cloudflare Access JWT
+ * Validate Cloudflare Access JWT or API Token
  * 
- * En producción: valida JWT contra public keys de Cloudflare Access
- * En desarrollo: permite bypass con ADMIN_DEV_BYPASS_SECRET header
+ * Soporta tres métodos de autenticación (en orden de prioridad):
+ * 1. API Token (X-Admin-Api-Token o Authorization: Bearer) - producción y preview
+ * 2. Cloudflare Access JWT - producción y preview
+ * 3. Dev bypass secret (ADMIN_DEV_BYPASS_SECRET) - solo en ENVIRONMENT=development
  */
 export async function validateAccessJWT(
   request: Request,
   env: Env
 ): Promise<AuthResult> {
-  // DEV BYPASS: solo en ENVIRONMENT=development con secret header correcto
+  // 1. API TOKEN: verificar X-Admin-Api-Token o Authorization Bearer
+  if (env.ADMIN_API_TOKEN) {
+    const apiToken = request.headers.get('X-Admin-Api-Token') || 
+                     request.headers.get('Authorization')?.replace('Bearer ', '');
+    
+    if (apiToken && apiToken === env.ADMIN_API_TOKEN) {
+      console.log('[AUTH] API token validado');
+      return {
+        success: true,
+        email: 'api-token@system',
+      };
+    }
+  }
+
+  // 2. DEV BYPASS: solo en ENVIRONMENT=development con secret header correcto
   if (env.ENVIRONMENT === 'development' && env.ADMIN_DEV_BYPASS_SECRET) {
     const bypassSecret = request.headers.get('ADMIN_DEV_BYPASS_SECRET');
     if (bypassSecret === env.ADMIN_DEV_BYPASS_SECRET) {
@@ -45,12 +62,12 @@ export async function validateAccessJWT(
     }
   }
 
-  // Validación normal de Cloudflare Access JWT
+  // 3. Validación normal de Cloudflare Access JWT
   const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!jwt) {
     return {
       success: false,
-      error: 'Missing Cf-Access-Jwt-Assertion header',
+      error: 'Missing authentication: provide X-Admin-Api-Token, Authorization Bearer, or Cf-Access-Jwt-Assertion header',
     };
   }
 

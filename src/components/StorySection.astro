@@ -1,22 +1,26 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
 
-const { title, paragraphs } = siteData.story;
+const content = await fetchPublicContent();
 
-const proofChips = [
-  { 
-    text: '2018 · Primera cerveza artesanal de la región',
-    icon: 'beer'
-  },
-  { 
-    text: '2020 · Restaurante',
-    icon: 'restaurant'
-  },
-  { 
-    text: 'Hecho en Salto del Guairá',
-    icon: 'location'
-  }
-];
+const title = 'Nuestra Historia'; // Fixed title
+
+// Get story paragraphs
+const paragraphs = content.textBlocks
+  .filter(tb => tb.section === 'story' && tb.key.startsWith('story.paragraph.'))
+  .sort((a, b) => a.sort_order - b.sort_order)
+  .map(tb => tb.body);
+
+// Get story chips
+const chipTextBlocks = content.textBlocks
+  .filter(tb => tb.section === 'story' && tb.key.startsWith('story.chip.'))
+  .sort((a, b) => a.sort_order - b.sort_order);
+
+const chipIcons = ['beer', 'restaurant', 'location']; // Icons por orden
+const proofChips = chipTextBlocks.map((tb, i) => ({
+  text: tb.body,
+  icon: chipIcons[i] || 'beer'
+}));
 ---
 
 <section id="historia" class="section">

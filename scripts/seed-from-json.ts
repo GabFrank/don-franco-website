@@ -6,6 +6,7 @@
  * - settings (menuMode, whatsapp, placeId)
  * - beers
  * - menu_categories + menu_items
+ * - menu_pages
  * - review_quotes + review_stats
  * - contact_info
  * 
@@ -18,6 +19,24 @@
 
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+
+// Utilidad para convertir URLs de Drive a formato lh3
+function extractDriveFileId(url: string): string | null {
+  const fileMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileMatch) return fileMatch[1];
+  
+  const ucMatch = url.match(/drive\.google\.com\/uc\?export=(view|download)&id=([a-zA-Z0-9_-]+)/);
+  if (ucMatch) return ucMatch[2];
+  
+  const idMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch) return idMatch[1];
+  
+  return null;
+}
+
+function buildLh3Url(fileId: string): string {
+  return `https://lh3.googleusercontent.com/d/${fileId}=w2000`;
+}
 
 // Tipos para site.json
 interface SiteData {
@@ -84,6 +103,14 @@ interface MenuData {
   }>;
 }
 
+interface MenuPagesData {
+  folderUrl: string;
+  pages: Array<{
+    url: string;
+    alt: string;
+  }>;
+}
+
 // Utilidad para generar UUIDs simples
 function uuid(): string {
   return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
@@ -98,6 +125,7 @@ function sqlEscape(str: string): string {
 const contentDir = join(process.cwd(), 'src/content');
 const siteData: SiteData = JSON.parse(readFileSync(join(contentDir, 'site.json'), 'utf-8'));
 const menuData: MenuData = JSON.parse(readFileSync(join(contentDir, 'menu-digital.json'), 'utf-8'));
+const menuPagesData: MenuPagesData = JSON.parse(readFileSync(join(contentDir, 'menu-pages.json'), 'utf-8'));
 
 let sql = `-- ============================================================
 -- DON FRANCO SEED DATA
@@ -151,13 +179,38 @@ sql += textBlocks.map((tb, i) =>
 sql += `;\n`;
 
 // ============================================================
+// IMAGES para BEERS
+// ============================================================
+sql += `\n-- IMAGES (imágenes para cervezas)\n`;
+const beerImageIds: Array<string | null> = [];
+const beerImageInserts: string[] = [];
+siteData.beers.items.forEach((beer, i) => {
+  if (beer.image) {
+    const imageId = uuid();
+    beerImageIds.push(imageId);
+    beerImageInserts.push(
+      `  ('${imageId}', 'beer.${beer.name.toLowerCase().replace(/\s+/g, '-')}', 'beer', '${sqlEscape(beer.image)}', '${sqlEscape(beer.name)}', 1, ${i})`
+    );
+  } else {
+    beerImageIds.push(null);
+  }
+});
+
+if (beerImageInserts.length > 0) {
+  sql += `INSERT INTO images (id, key, section, r2_key, alt, visible, sort_order) VALUES\n`;
+  sql += beerImageInserts.join(',\n');
+  sql += `;\n`;
+}
+
+// ============================================================
 // BEERS
 // ============================================================
 sql += `\n-- BEERS (cervezas artesanales)\n`;
 sql += `INSERT INTO beers (id, name, style, notes, image_id, visible, sort_order) VALUES\n`;
-sql += siteData.beers.items.map((beer, i) => 
-  `  ('${uuid()}', '${sqlEscape(beer.name)}', '${sqlEscape(beer.style)}', '${sqlEscape(beer.notes)}', NULL, 1, ${i})`
-).join(',\n');
+sql += siteData.beers.items.map((beer, i) => {
+  const imageIdValue = beerImageIds[i] === null ? 'NULL' : `'${beerImageIds[i]}'`;
+  return `  ('${uuid()}', '${sqlEscape(beer.name)}', '${sqlEscape(beer.style)}', '${sqlEscape(beer.notes)}', ${imageIdValue}, 1, ${i})`;
+}).join(',\n');
 sql += `;\n`;
 
 // ============================================================
@@ -184,6 +237,24 @@ menuData.categories.forEach((cat) => {
 sql += `INSERT INTO menu_items (id, category_id, name, description, price, badge, image_id, visible, sort_order) VALUES\n`;
 sql += allItems.join(',\n');
 sql += `;\n`;
+
+// ============================================================
+// MENU PAGES (PNG mode)
+// ============================================================
+sql += `\n-- MENU PAGES\n`;
+if (menuPagesData.pages && menuPagesData.pages.length > 0) {
+  sql += `INSERT INTO menu_pages (id, title, r2_key, visible, sort_order) VALUES\n`;
+  sql += menuPagesData.pages.map((page, i) => {
+    // Convert Drive URLs to lh3 format for reliable embedding
+    let url = page.url;
+    const fileId = extractDriveFileId(url);
+    if (fileId) {
+      url = buildLh3Url(fileId);
+    }
+    return `  ('${uuid()}', '${sqlEscape(page.alt)}', '${sqlEscape(url)}', 1, ${i})`;
+  }).join(',\n');
+  sql += `;\n`;
+}
 
 // ============================================================
 // REVIEW QUOTES + STATS
@@ -217,6 +288,7 @@ console.log(`   - Text blocks: ${textBlocks.length}`);
 console.log(`   - Cervezas: ${siteData.beers.items.length}`);
 console.log(`   - Categorías menú: ${menuData.categories.length}`);
 console.log(`   - Items menú: ${allItems.length}`);
+console.log(`   - Páginas menú (PNG): ${menuPagesData.pages.length}`);
 console.log(`   - Review quotes: ${siteData.reviews.quotes.length}`);
 console.log(`\nPara aplicar el seed:`);
 console.log(`   wrangler d1 execute don-franco-content --file=ops/d1/seed.sql`);

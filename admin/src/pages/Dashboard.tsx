@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Dashboard() {
   return (
     <div className="container">
@@ -5,40 +7,47 @@ function Dashboard() {
       <p>Bienvenido al panel de administración de Don Franco.</p>
       
       <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-        <div className="card">
+        <Link to="/textos" className="dashboard-card card">
           <h3>📝 Textos</h3>
           <p>Gestionar bloques de texto del sitio</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/menu" className="dashboard-card card">
           <h3>🍽️ Menú</h3>
           <p>Editar categorías, items y páginas</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/cervezas" className="dashboard-card card">
           <h3>🍺 Cervezas</h3>
           <p>Administrar cervezas y sus imágenes</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/galeria" className="dashboard-card card">
           <h3>📸 Galería</h3>
           <p>Gestionar fotos de galería</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/resenas" className="dashboard-card card">
           <h3>⭐ Reseñas</h3>
           <p>Editar citas y estadísticas</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/contacto" className="dashboard-card card">
           <h3>📞 Contacto</h3>
           <p>Actualizar información de contacto</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
         
-        <div className="card">
+        <Link to="/publicar" className="dashboard-card card">
           <h3>🚀 Publicar</h3>
           <p>Publicar cambios al sitio</p>
-        </div>
+          <span className="card-arrow">→</span>
+        </Link>
       </div>
       
       <div className="alert alert-info" style={{ marginTop: '2rem' }}>

@@ -10,6 +10,14 @@ function Gallery() {
   const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
   const [uploading, setUploading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
+  const resolveImageSrc = (r2Key: string | undefined): string => {
+    if (!r2Key) return '/media/placeholder.jpg';
+    if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
+      return r2Key;
+    }
+    return `/media/${r2Key}`;
+  };
   
   const [formData, setFormData] = useState({
     r2_key: '',
@@ -216,7 +224,7 @@ function Gallery() {
             </div>
             
             <img 
-              src={`/media/${image.r2_key}`} 
+              src={resolveImageSrc(image.r2_key)} 
               alt={image.alt || 'Galería'}
               style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '0.5rem' }}
             />
@@ -262,7 +270,7 @@ function Gallery() {
             <form onSubmit={handleSave}>
               <div style={{ marginBottom: '1rem' }}>
                 <img 
-                  src={`/media/${editingImage.r2_key}`} 
+                  src={resolveImageSrc(editingImage.r2_key)} 
                   alt="Preview"
                   style={{ width: '100%', maxHeight: '300px', objectFit: 'contain', borderRadius: '4px' }}
                 />

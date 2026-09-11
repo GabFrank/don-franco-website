@@ -1,8 +1,22 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent, getR2ImageUrl } from '../lib/content-api';
 
-const { title, items } = siteData.beers;
-const beers = items.filter((beer: any) => beer.name);
+const content = await fetchPublicContent();
+
+const title = 'Nuestras cervezas artesanales';
+const beers = content.beers
+  .filter(beer => beer.name)
+  .map(beer => ({
+    name: beer.name,
+    style: beer.style || '',
+    notes: beer.notes || '',
+    image: beer.image_r2_key 
+      ? (beer.image_r2_key.startsWith('http') || beer.image_r2_key.startsWith('/') 
+          ? beer.image_r2_key 
+          : getR2ImageUrl(beer.image_r2_key))
+      : null,
+    imageVisible: beer.image_r2_key && beer.image_visible == null ? true : (beer.image_visible === 1)
+  }));
 ---
 
 {beers.length > 0 && (
@@ -15,7 +29,7 @@ const beers = items.filter((beer: any) => beer.name);
           {beers.map((beer: any) => (
             <div class="beer-card">
               <div class="beer-image">
-                {beer.image ? (
+                {beer.image && beer.imageVisible ? (
                   <img src={beer.image} alt={beer.name} loading="lazy" />
                 ) : (
                   <div class="beer-placeholder">
@@ -47,6 +61,7 @@ const beers = items.filter((beer: any) => beer.name);
   @media (min-width: 768px) {
     .beer-section {
       padding: var(--space-24) 0;
+      padding-bottom: calc(var(--space-24) + 88px);
     }
   }
 

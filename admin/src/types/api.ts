@@ -37,6 +37,8 @@ export interface Beer {
   updated_at: number;
   deleted_at: number | null;
   image?: Image;
+  image_r2_key?: string;
+  image_visible?: number;
 }
 
 export interface MenuCategory {

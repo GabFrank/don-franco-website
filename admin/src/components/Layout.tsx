@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import './Layout.css';
 
 interface LayoutProps {
@@ -7,6 +8,7 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigation = [
     { path: '/', label: 'Dashboard', icon: '🏠' },
@@ -19,9 +21,34 @@ function Layout({ children }: LayoutProps) {
     { path: '/publicar', label: 'Publicar', icon: '🚀' },
   ];
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <div className="layout">
-      <aside className="sidebar">
+      <button 
+        className="mobile-menu-toggle"
+        onClick={toggleMobileMenu}
+        aria-label="Toggle menu"
+      >
+        <span className="hamburger-icon">
+          {isMobileMenuOpen ? '✕' : '☰'}
+        </span>
+      </button>
+
+      {isMobileMenuOpen && (
+        <div 
+          className="mobile-menu-overlay" 
+          onClick={closeMobileMenu}
+        />
+      )}
+
+      <aside className={`sidebar ${isMobileMenuOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar-header">
           <h1 className="sidebar-title">Don Franco</h1>
           <p className="sidebar-subtitle">Panel Admin</p>
@@ -32,6 +59,7 @@ function Layout({ children }: LayoutProps) {
               key={item.path}
               to={item.path}
               className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={closeMobileMenu}
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-label">{item.label}</span>

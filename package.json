@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "dev:admin": "cd admin && vite",
     "build": "npm run build:admin && astro build",
-    "build:admin": "cd admin && vite build",
+    "build:admin": "cd admin && vite build && node copy-routes.js",
     "preview": "astro preview",
     "seed:generate": "tsx scripts/seed-from-json.ts",
     "migrate:media": "tsx scripts/migrate-drive-to-r2.ts"

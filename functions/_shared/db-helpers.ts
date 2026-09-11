@@ -117,7 +117,7 @@ export function jsonResponse(data: any, status = 200): Response {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Cf-Access-Jwt-Assertion, ADMIN_DEV_BYPASS_SECRET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Api-Token, Cf-Access-Jwt-Assertion, ADMIN_DEV_BYPASS_SECRET',
     },
   });
 }
@@ -131,7 +131,7 @@ export function corsOptions(): Response {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Cf-Access-Jwt-Assertion, ADMIN_DEV_BYPASS_SECRET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Api-Token, Cf-Access-Jwt-Assertion, ADMIN_DEV_BYPASS_SECRET',
       'Access-Control-Max-Age': '86400',
     },
   });

@@ -1,35 +1,55 @@
 ---
-import siteData from '../content/site.json';
-import menuPagesData from '../content/menu-pages.json';
-import menuDigitalData from '../content/menu-digital.json';
+import { fetchPublicContent, getR2ImageUrl } from '../lib/content-api';
 import { getMenuPageImageUrl } from '../lib/drive';
 
-const menuConfig = siteData.menu;
-const mode = menuConfig.mode;
+const content = await fetchPublicContent();
+
+const mode = content.settings.menuMode || 'png';
 
 const showPng = mode === 'png' || mode === 'both';
 const showDigital = mode === 'digital' || mode === 'both';
 
 let menuPages: Array<{ url: string; alt: string }> = [];
 let firstPagePreview = '';
-if (showPng && menuPagesData.pages) {
-  menuPages = menuPagesData.pages.map((page: any) => ({
-    url: getMenuPageImageUrl(page),
-    alt: page.alt || 'Página de menú'
+if (showPng && content.menu.pages.length > 0) {
+  menuPages = content.menu.pages.map((page) => ({
+    url: page.r2_key.startsWith('http') 
+      ? getMenuPageImageUrl({ url: page.r2_key })
+      : getR2ImageUrl(page.r2_key),
+    alt: page.title || 'Página de menú'
   }));
   firstPagePreview = menuPages[0]?.url || '';
 }
 
-const categories = showDigital ? menuDigitalData.categories : [];
+// Rebuild categories structure with items
+const categories = showDigital 
+  ? content.menu.categories.map(cat => {
+      const categoryItems = content.menu.items
+        .filter(item => item.category_id === cat.id)
+        .map(item => ({
+          name: item.name,
+          description: item.description,
+          price: item.price,
+          currency: 'Gs.', // Default currency
+          badge: item.badge,
+        }));
+      
+      return {
+        name: cat.title,
+        description: null,
+        items: categoryItems
+      };
+    })
+  : [];
 
-// Get spotlight items from menu-digital (first 3 items from first category with items)
-const spotlightCategory = menuDigitalData.categories.find((cat: any) => cat.items && cat.items.length > 0);
+// Get spotlight items from first category with items
+const spotlightCategory = categories.find((cat: any) => cat.items && cat.items.length > 0);
 const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) : [];
 ---
 
 <section id="menu" class="section">
   <div class="container">
-    <h2 class="section-title">Nuestro Menú</h2>
+    <h2 class="section-title">Destacados</h2>
 
     {mode === 'both' && (
       <div class="menu-tabs">
@@ -376,19 +396,12 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
 
 {showPng && (
   <script>
-    import menuPagesData from '../content/menu-pages.json';
-    import { getMenuPageImageUrl } from '../lib/drive';
-    
     const openBtn = document.getElementById('open-menu-fullscreen');
     const previewCard = document.querySelector('.menu-preview-card');
-    const menuPages = menuPagesData.pages.map((page: any) => ({
-      url: getMenuPageImageUrl(page),
-      alt: page.alt || 'Página de menú'
-    }));
 
     const openMenu = () => {
       const event = new CustomEvent('open-menu-fullscreen', { 
-        detail: { pages: menuPages } 
+        detail: { pages: window.__menuPages || [] } 
       });
       window.dispatchEvent(event);
     };
@@ -397,6 +410,13 @@ const spotlightItems = spotlightCategory ? spotlightCategory.items.slice(0, 3) :
     previewCard?.addEventListener('click', openMenu);
   </script>
 )}
+
+<script define:vars={{ menuPages }}>
+  // Store menu pages globally for fullscreen menu
+  if (typeof window !== 'undefined') {
+    window.__menuPages = menuPages;
+  }
+</script>
 
 <script>
   const tabs = document.querySelectorAll('.menu-tab');

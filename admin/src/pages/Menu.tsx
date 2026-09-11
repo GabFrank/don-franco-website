@@ -11,6 +11,14 @@ function Menu() {
   const [pages, setPages] = useState<MenuPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const resolveImageSrc = (r2Key: string | undefined): string => {
+    if (!r2Key) return '/media/placeholder.jpg';
+    if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
+      return r2Key;
+    }
+    return `/media/${r2Key}`;
+  };
   
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showItemModal, setShowItemModal] = useState(false);
@@ -168,7 +176,7 @@ function Menu() {
 
       {activeTab === 'digital' && (
         <>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+          <div className="action-buttons-top">
             <button className="btn btn-primary" onClick={() => {
               setEditingCategory(null);
               setCategoryForm({ title: '', visible: 1, sort_order: 0 });
@@ -199,9 +207,9 @@ function Menu() {
             
             return (
               <div key={category.id} className={`card ${isCategoryHidden ? 'item-hidden' : ''}`} style={{ marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div className="category-header">
                   <h2>{category.title}</h2>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div className="action-buttons">
                     <button className="btn btn-secondary" onClick={() => {
                       setEditingCategory(category);
                       setCategoryForm({
@@ -228,17 +236,18 @@ function Menu() {
                   </div>
                 )}
 
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Precio</th>
-                      <th>Badge</th>
-                      <th>Estado</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <div className="table-wrapper">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Badge</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                     {categoryItems.map(item => {
                       const isEffectivelyHidden = isCategoryHidden || item.visible === 0;
                       
@@ -266,7 +275,7 @@ function Menu() {
                             )}
                           </td>
                           <td>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div className="action-buttons">
                               <button className="btn btn-secondary" onClick={() => {
                                 setEditingItem(item);
                                 setItemForm({
@@ -293,8 +302,91 @@ function Menu() {
                         </tr>
                       );
                     })}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mobile-card-list">
+                  {categoryItems.map(item => {
+                    const isEffectivelyHidden = isCategoryHidden || item.visible === 0;
+                    
+                    return (
+                      <div key={item.id} className={`mobile-card-item ${isEffectivelyHidden ? 'item-hidden' : ''}`}>
+                        <div className="mobile-card-row">
+                          <span className="mobile-card-label">Nombre</span>
+                          <span className="mobile-card-value">
+                            {item.name}
+                            {isCategoryHidden && item.visible === 1 && (
+                              <span style={{ marginLeft: '0.5rem', color: 'var(--warning)' }}>
+                                ⚠️
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                        
+                        {item.description && (
+                          <div className="mobile-card-row">
+                            <span className="mobile-card-label">Descripción</span>
+                            <span className="mobile-card-value">{item.description}</span>
+                          </div>
+                        )}
+                        
+                        <div className="mobile-card-row">
+                          <span className="mobile-card-label">Precio</span>
+                          <span className="mobile-card-value">{item.price ? `Gs ${item.price.toLocaleString()}` : '-'}</span>
+                        </div>
+                        
+                        {item.badge && (
+                          <div className="mobile-card-row">
+                            <span className="mobile-card-label">Badge</span>
+                            <span className="mobile-card-value">{item.badge}</span>
+                          </div>
+                        )}
+                        
+                        <div className="mobile-card-row">
+                          <span className="mobile-card-label">Estado</span>
+                          <div>
+                            {item.visible === 1 ? (
+                              <span className="badge badge-visible">Visible</span>
+                            ) : (
+                              <span className="badge badge-hidden">Oculto</span>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {isCategoryHidden && item.visible === 1 && (
+                          <div className="alert alert-warning" style={{ fontSize: '0.75rem', padding: '0.5rem', marginTop: '0.5rem' }}>
+                            ⚠️ Categoría oculta - item no será público
+                          </div>
+                        )}
+                        
+                        <div className="mobile-card-actions">
+                          <button className="btn btn-secondary" onClick={() => {
+                            setEditingItem(item);
+                            setItemForm({
+                              category_id: item.category_id,
+                              name: item.name,
+                              description: item.description || '',
+                              price: item.price || 0,
+                              badge: item.badge || '',
+                              visible: item.visible,
+                              sort_order: item.sort_order,
+                            });
+                            setShowItemModal(true);
+                          }}>
+                            Editar
+                          </button>
+                          <button 
+                            className={item.visible ? 'btn btn-secondary' : 'btn btn-success'}
+                            onClick={() => handleToggleItemVisible(item)}
+                          >
+                            {item.visible ? '👁️ Ocultar' : '👁️ Mostrar'}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
 
                 {categoryItems.length === 0 && (
                   <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '1rem' }}>
@@ -309,7 +401,7 @@ function Menu() {
 
       {activeTab === 'pages' && (
         <>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+          <div className="action-buttons-top">
             <button className="btn btn-primary" onClick={() => {
               setEditingPage(null);
               setPageForm({ title: '', r2_key: '', visible: 1, sort_order: 0 });
@@ -326,7 +418,8 @@ function Menu() {
           </div>
 
           <div className="card">
-            <table className="table">
+            <div className="table-wrapper">
+              <table className="table">
               <thead>
                 <tr>
                   <th>Título</th>
@@ -341,7 +434,7 @@ function Menu() {
                   <tr key={page.id} className={page.visible === 0 ? 'item-hidden' : ''}>
                     <td>{page.title}</td>
                     <td>
-                      <img src={`/media/${page.r2_key}`} alt={page.title} className="image-preview" />
+                      <img src={resolveImageSrc(page.r2_key)} alt={page.title} className="image-preview" />
                     </td>
                     <td>
                       {page.visible === 1 ? (
@@ -352,7 +445,7 @@ function Menu() {
                     </td>
                     <td>{page.sort_order}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div className="action-buttons">
                         <button className="btn btn-secondary" onClick={() => {
                           setEditingPage(page);
                           setPageForm({
@@ -377,6 +470,64 @@ function Menu() {
                 ))}
               </tbody>
             </table>
+            </div>
+
+            <div className="mobile-card-list">
+              {pages.map(page => (
+                <div key={page.id} className={`mobile-card-item ${page.visible === 0 ? 'item-hidden' : ''}`}>
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Título</span>
+                    <span className="mobile-card-value">{page.title}</span>
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Imagen</span>
+                    <img 
+                      src={resolveImageSrc(page.r2_key)} 
+                      alt={page.title} 
+                      style={{ width: '100%', maxWidth: '200px', height: 'auto', borderRadius: '4px', border: '1px solid var(--border)', marginTop: '0.5rem' }}
+                    />
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Estado</span>
+                    <div>
+                      {page.visible === 1 ? (
+                        <span className="badge badge-visible">Visible</span>
+                      ) : (
+                        <span className="badge badge-hidden">Oculto</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mobile-card-row">
+                    <span className="mobile-card-label">Orden</span>
+                    <span className="mobile-card-value">{page.sort_order}</span>
+                  </div>
+                  
+                  <div className="mobile-card-actions">
+                    <button className="btn btn-secondary" onClick={() => {
+                      setEditingPage(page);
+                      setPageForm({
+                        title: page.title,
+                        r2_key: page.r2_key,
+                        visible: page.visible,
+                        sort_order: page.sort_order,
+                      });
+                      setShowPageModal(true);
+                    }}>
+                      Editar
+                    </button>
+                    <button 
+                      className={page.visible ? 'btn btn-secondary' : 'btn btn-success'}
+                      onClick={() => handleTogglePageVisible(page)}
+                    >
+                      {page.visible ? '👁️ Ocultar' : '👁️ Mostrar'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       )}

@@ -1,13 +1,19 @@
 ---
-import siteData from '../content/site.json';
+import { fetchPublicContent, getTextBlock, getImages, getR2ImageUrl } from '../lib/content-api';
 import { getMenuPageImageUrl } from '../lib/drive';
 
-const { title, tagline, description, ctaText, backgroundImages } = siteData.hero;
-const { whatsapp } = siteData.contact;
+const content = await fetchPublicContent();
 
-// Convert Drive share links to direct image URLs
-const heroImage = backgroundImages && backgroundImages[0] 
-  ? getMenuPageImageUrl({ url: backgroundImages[0] })
+const title = getTextBlock(content, 'hero', 'hero.title') || 'DON FRANCO';
+const tagline = getTextBlock(content, 'hero', 'hero.tagline') || 'RESTAURANTE ARTESANAL';
+const description = getTextBlock(content, 'hero', 'hero.description') || '';
+const ctaText = getTextBlock(content, 'hero', 'hero.ctaText') || 'VER MENÚ';
+
+const heroImages = getImages(content, 'hero_bg');
+const heroImage = heroImages.length > 0 
+  ? (heroImages[0].r2_key.startsWith('http') 
+      ? getMenuPageImageUrl({ url: heroImages[0].r2_key })
+      : getR2ImageUrl(heroImages[0].r2_key))
   : '';
 ---
 

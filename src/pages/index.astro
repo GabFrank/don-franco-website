@@ -14,12 +14,17 @@ import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import StickyCtaBar from '../components/StickyCtaBar.astro';
 
-import siteData from '../content/site.json';
+import { fetchPublicContent } from '../lib/content-api';
+
+const content = await fetchPublicContent();
+const siteName = 'Don Franco';
+const tagline = 'RESTAURANTE ARTESANAL';
+const metaDescription = 'Hamburguesas artesanales, cervezas caseras y parrilla en Salto del Guairá. Don Franco: donde la pasión por lo artesanal se encuentra con el sabor auténtico.';
 ---
 
 <BaseLayout 
-  title={`${siteData.siteName} - ${siteData.tagline}`}
-  description={siteData.metaDescription}
+  title={`${siteName} - ${tagline}`}
+  description={metaDescription}
 >
   <Header />
   <main>
