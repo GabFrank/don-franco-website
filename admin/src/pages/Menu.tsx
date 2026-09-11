@@ -11,6 +11,14 @@ function Menu() {
   const [pages, setPages] = useState<MenuPage[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const resolveImageSrc = (r2Key: string | undefined): string => {
+    if (!r2Key) return '/media/placeholder.jpg';
+    if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
+      return r2Key;
+    }
+    return `/media/${r2Key}`;
+  };
   
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showItemModal, setShowItemModal] = useState(false);
@@ -168,7 +176,7 @@ function Menu() {
 
       {activeTab === 'digital' && (
         <>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+          <div className="action-buttons-top">
             <button className="btn btn-primary" onClick={() => {
               setEditingCategory(null);
               setCategoryForm({ title: '', visible: 1, sort_order: 0 });
@@ -199,9 +207,9 @@ function Menu() {
             
             return (
               <div key={category.id} className={`card ${isCategoryHidden ? 'item-hidden' : ''}`} style={{ marginBottom: '2rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <div className="category-header">
                   <h2>{category.title}</h2>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div className="action-buttons">
                     <button className="btn btn-secondary" onClick={() => {
                       setEditingCategory(category);
                       setCategoryForm({
@@ -228,17 +236,18 @@ function Menu() {
                   </div>
                 )}
 
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Precio</th>
-                      <th>Badge</th>
-                      <th>Estado</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <div className="table-wrapper">
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Badge</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
                     {categoryItems.map(item => {
                       const isEffectivelyHidden = isCategoryHidden || item.visible === 0;
                       
@@ -266,7 +275,7 @@ function Menu() {
                             )}
                           </td>
                           <td>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <div className="action-buttons">
                               <button className="btn btn-secondary" onClick={() => {
                                 setEditingItem(item);
                                 setItemForm({
@@ -293,8 +302,9 @@ function Menu() {
                         </tr>
                       );
                     })}
-                  </tbody>
-                </table>
+                    </tbody>
+                  </table>
+                </div>
 
                 {categoryItems.length === 0 && (
                   <p style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '1rem' }}>
@@ -309,7 +319,7 @@ function Menu() {
 
       {activeTab === 'pages' && (
         <>
-          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+          <div className="action-buttons-top">
             <button className="btn btn-primary" onClick={() => {
               setEditingPage(null);
               setPageForm({ title: '', r2_key: '', visible: 1, sort_order: 0 });
@@ -326,7 +336,8 @@ function Menu() {
           </div>
 
           <div className="card">
-            <table className="table">
+            <div className="table-wrapper">
+              <table className="table">
               <thead>
                 <tr>
                   <th>Título</th>
@@ -341,7 +352,7 @@ function Menu() {
                   <tr key={page.id} className={page.visible === 0 ? 'item-hidden' : ''}>
                     <td>{page.title}</td>
                     <td>
-                      <img src={`/media/${page.r2_key}`} alt={page.title} className="image-preview" />
+                      <img src={resolveImageSrc(page.r2_key)} alt={page.title} className="image-preview" />
                     </td>
                     <td>
                       {page.visible === 1 ? (
@@ -352,7 +363,7 @@ function Menu() {
                     </td>
                     <td>{page.sort_order}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div className="action-buttons">
                         <button className="btn btn-secondary" onClick={() => {
                           setEditingPage(page);
                           setPageForm({
@@ -377,6 +388,7 @@ function Menu() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       )}

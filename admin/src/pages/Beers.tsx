@@ -9,6 +9,14 @@ function Beers() {
   const [showModal, setShowModal] = useState(false);
   const [editingBeer, setEditingBeer] = useState<Beer | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  const resolveImageSrc = (r2Key: string | undefined): string => {
+    if (!r2Key) return '/media/placeholder.jpg';
+    if (r2Key.startsWith('/') || r2Key.startsWith('http://') || r2Key.startsWith('https://')) {
+      return r2Key;
+    }
+    return `/media/${r2Key}`;
+  };
   
   const [formData, setFormData] = useState({
     name: '',
@@ -151,7 +159,7 @@ function Beers() {
           <div key={beer.id} className={`card ${beer.visible === 0 ? 'item-hidden' : ''}`}>
             {beer.image_id ? (
               <img 
-                src={`/media/${beer.image?.r2_key || 'placeholder.jpg'}`} 
+                src={resolveImageSrc(beer.image?.r2_key)} 
                 alt={beer.name}
                 style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
               />
@@ -264,7 +272,7 @@ function Beers() {
                 {uploadedImage && (
                   <div style={{ marginTop: '0.5rem' }}>
                     <img 
-                      src={`/media/${uploadedImage.r2_key}`} 
+                      src={resolveImageSrc(uploadedImage.r2_key)} 
                       alt="Preview"
                       className="image-preview"
                     />
@@ -274,7 +282,7 @@ function Beers() {
                 {editingBeer?.image?.r2_key && !uploadedImage && (
                   <div style={{ marginTop: '0.5rem' }}>
                     <img 
-                      src={`/media/${editingBeer.image.r2_key}`} 
+                      src={resolveImageSrc(editingBeer.image.r2_key)} 
                       alt="Current"
                       className="image-preview"
                     />

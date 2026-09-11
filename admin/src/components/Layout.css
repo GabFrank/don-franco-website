@@ -63,6 +63,9 @@
   padding: 0 1.5rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .sidebar-title {
@@ -143,6 +146,10 @@
     display: block;
   }
 
+  .sidebar-header {
+    padding-top: 4.5rem;
+  }
+
   .main-content {
     margin-left: 0;
     padding: 4rem 1rem 1rem;
@@ -158,6 +165,14 @@
   .nav-item {
     padding: 1rem 1.5rem;
     min-height: 52px;
+  }
+
+  .sidebar-title {
+    font-size: 1.35rem;
+  }
+
+  .sidebar-subtitle {
+    font-size: 0.8rem;
   }
 }
 
