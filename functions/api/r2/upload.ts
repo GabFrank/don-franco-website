@@ -10,6 +10,17 @@ import { requireAuth, type Env } from '../../_shared/auth';
 import { jsonResponse, corsOptions } from '../../_shared/db-helpers';
 import { nanoid } from 'nanoid';
 
+// Solo imágenes: /media/ se sirve desde el mismo origen que el admin (evita subir HTML/JS)
+const ALLOWED_TYPES: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+  'image/avif': 'avif',
+};
+
+const FOLDER_PATTERN = /^[a-z0-9_-]+(\/[a-z0-9_-]+)*$/i;
+
 export const onRequestOptions: PagesFunction<Env> = async () => {
   return corsOptions();
 };
@@ -32,8 +43,16 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       return jsonResponse({ error: 'Missing file in form data' }, 400);
     }
 
+    const ext = ALLOWED_TYPES[file.type];
+    if (!ext) {
+      return jsonResponse({ error: 'Unsupported file type (only jpeg, png, webp, gif, avif)' }, 400);
+    }
+
+    if (!FOLDER_PATTERN.test(folder)) {
+      return jsonResponse({ error: 'Invalid folder' }, 400);
+    }
+
     // Generar key único
-    const ext = file.name.split('.').pop() || '';
     const r2Key = `${folder}/${nanoid(12)}.${ext}`;
 
     // Subir a R2

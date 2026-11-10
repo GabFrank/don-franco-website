@@ -1,11 +1,11 @@
 /**
  * Cloudflare Access JWT validation helpers
- * 
+ *
  * Validates Cf-Access-Jwt-Assertion header against Cloudflare Access public keys.
  * Supports development bypass mode for local testing.
  */
 
-import { jwtVerify, importSPKI, createRemoteJWKSet } from 'jose';
+import { jwtVerify, createRemoteJWKSet } from 'jose';
 
 export interface Env {
   DB: D1Database;
@@ -25,8 +25,31 @@ export interface AuthResult {
 }
 
 /**
+ * Comparación de strings en tiempo constante (evita ataques de timing)
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  const enc = new TextEncoder();
+  const aBytes = enc.encode(a);
+  const bBytes = enc.encode(b);
+  // Recorre siempre la longitud del esperado para no filtrar por tiempo
+  let diff = aBytes.length ^ bBytes.length;
+  for (let i = 0; i < bBytes.length; i++) {
+    diff |= (aBytes[i] ?? 0) ^ bBytes[i];
+  }
+  return diff === 0;
+}
+
+/**
+ * El bypass de desarrollo solo existe con ENVIRONMENT=development explícito.
+ * En production (o sin ENVIRONMENT) queda inactivo aunque exista el secreto.
+ */
+function devBypassEnabled(env: Env): boolean {
+  return env.ENVIRONMENT === 'development' && !!env.ADMIN_DEV_BYPASS_SECRET;
+}
+
+/**
  * Validate Cloudflare Access JWT or API Token
- * 
+ *
  * Soporta tres métodos de autenticación (en orden de prioridad):
  * 1. API Token (X-Admin-Api-Token o Authorization: Bearer) - producción y preview
  * 2. Cloudflare Access JWT - producción y preview
@@ -38,10 +61,11 @@ export async function validateAccessJWT(
 ): Promise<AuthResult> {
   // 1. API TOKEN: verificar X-Admin-Api-Token o Authorization Bearer
   if (env.ADMIN_API_TOKEN) {
-    const apiToken = request.headers.get('X-Admin-Api-Token') || 
-                     request.headers.get('Authorization')?.replace('Bearer ', '');
-    
-    if (apiToken && apiToken === env.ADMIN_API_TOKEN) {
+    const authHeader = request.headers.get('Authorization');
+    const apiToken = request.headers.get('X-Admin-Api-Token') ||
+                     (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null);
+
+    if (apiToken && timingSafeEqual(apiToken, env.ADMIN_API_TOKEN)) {
       console.log('[AUTH] API token validado');
       return {
         success: true,
@@ -51,9 +75,9 @@ export async function validateAccessJWT(
   }
 
   // 2. DEV BYPASS: solo en ENVIRONMENT=development con secret header correcto
-  if (env.ENVIRONMENT === 'development' && env.ADMIN_DEV_BYPASS_SECRET) {
+  if (devBypassEnabled(env)) {
     const bypassSecret = request.headers.get('ADMIN_DEV_BYPASS_SECRET');
-    if (bypassSecret === env.ADMIN_DEV_BYPASS_SECRET) {
+    if (bypassSecret && timingSafeEqual(bypassSecret, env.ADMIN_DEV_BYPASS_SECRET!)) {
       console.log('[AUTH] Dev bypass activado');
       return {
         success: true,
@@ -80,19 +104,11 @@ export async function validateAccessJWT(
   }
 
   try {
-    // Obtener certificados públicos de Cloudflare Access
     const certsUrl = `https://${env.ACCESS_TEAM_DOMAIN}/cdn-cgi/access/certs`;
-    const certsResponse = await fetch(certsUrl);
-    
-    if (!certsResponse.ok) {
-      throw new Error(`Failed to fetch Access certs: ${certsResponse.statusText}`);
-    }
 
-    const certs = await certsResponse.json() as { keys: Array<{ kid: string; kty: string; alg: string; use: string; e: string; n: string }> };
-    
     // Crear JWKS remoto para verificación
     const JWKS = createRemoteJWKSet(new URL(certsUrl));
-    
+
     // Verificar JWT
     const { payload } = await jwtVerify(jwt, JWKS, {
       audience: env.ACCESS_AUD,
@@ -115,7 +131,7 @@ export async function validateAccessJWT(
     console.error('[AUTH] JWT validation failed:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'JWT validation failed',
+      error: 'JWT validation failed',
     };
   }
 }
@@ -129,7 +145,7 @@ export async function requireAuth(
   env: Env
 ): Promise<{ email: string } | Response> {
   const authResult = await validateAccessJWT(request, env);
-  
+
   if (!authResult.success) {
     return new Response(
       JSON.stringify({ error: 'Unauthorized', details: authResult.error }),
@@ -144,21 +160,27 @@ export async function requireAuth(
 }
 
 /**
+ * true si la request viene autenticada como admin (sin responder 401)
+ */
+export async function isAdminRequest(request: Request, env: Env): Promise<boolean> {
+  const authResult = await validateAccessJWT(request, env);
+  return authResult.success;
+}
+
+/**
  * Extraer email del usuario autenticado (ya validado)
+ * Solo para logs/auditoría después de requireAuth
  */
 export function getAuthEmail(request: Request): string | null {
-  // En dev bypass mode, retornar email por defecto
   const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!jwt) {
-    return 'dev@localhost'; // Asumiendo dev bypass
+    return null;
   }
 
-  // En producción, el email está en el JWT (pero ya debería estar validado)
-  // Esta función es solo para logs/auditoría después de requireAuth
   try {
     const parts = jwt.split('.');
     if (parts.length !== 3) return null;
-    
+
     const payload = JSON.parse(atob(parts[1]));
     return payload.email || null;
   } catch {

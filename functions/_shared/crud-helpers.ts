@@ -3,27 +3,43 @@
  * Reduce duplicación de código en archivos [id].ts
  */
 
-import { requireAuth, type Env } from './auth';
+import { requireAuth, isAdminRequest, type Env } from './auth';
 import { jsonResponse, now, softDelete, hardDelete } from './db-helpers';
 
 interface CrudOptions {
   tableName: string;
   paramKey?: string;
   selectQuery?: string;
+  /** Lista blanca obligatoria para PUT: nunca se usan los nombres del body */
   updateableFields?: string[];
   requiredFields?: string[];
 }
 
+const SQL_IDENTIFIER = /^[a-z_][a-z0-9_]*$/;
+
+/**
+ * Valida nombres de tabla/columna antes de interpolarlos en SQL
+ */
+function assertIdentifiers(...names: string[]): void {
+  for (const name of names) {
+    if (!SQL_IDENTIFIER.test(name)) {
+      throw new Error(`Invalid SQL identifier: ${name}`);
+    }
+  }
+}
+
 /**
  * Handler genérico para GET /:id
+ * Registros ocultos o borrados solo se devuelven a un admin autenticado.
  */
 export async function handleGetById(
   context: EventContext<Env, string, Record<string, unknown>>,
   options: CrudOptions
 ): Promise<Response> {
-  const { env, params } = context;
+  const { request, env, params } = context;
   const { tableName, paramKey = 'id', selectQuery } = options;
-  
+  assertIdentifiers(tableName, paramKey);
+
   const id = params[paramKey] as string;
   if (!id) {
     return jsonResponse({ error: `Missing ${paramKey} parameter` }, 400);
@@ -33,9 +49,14 @@ export async function handleGetById(
   const record = await env.DB
     .prepare(query)
     .bind(id)
-    .first();
+    .first<Record<string, unknown>>();
 
   if (!record) {
+    return jsonResponse({ error: `${tableName} not found` }, 404);
+  }
+
+  const hidden = record.visible === 0 || (record.deleted_at !== undefined && record.deleted_at !== null);
+  if (hidden && !(await isAdminRequest(request, env))) {
     return jsonResponse({ error: `${tableName} not found` }, 404);
   }
 
@@ -50,12 +71,19 @@ export async function handleUpdateById(
   options: CrudOptions
 ): Promise<Response> {
   const { request, env, params } = context;
-  const { tableName, paramKey = 'id', updateableFields, requiredFields = [] } = options;
+  const { tableName, paramKey = 'id', updateableFields } = options;
 
   const authResult = await requireAuth(request, env);
   if (authResult instanceof Response) {
     return authResult;
   }
+
+  // Sin lista blanca no se actualiza nada (antes se usaban las claves del body → inyección SQL)
+  if (!updateableFields || updateableFields.length === 0) {
+    console.error(`[${tableName}] PUT rejected: route has no updateableFields`);
+    return jsonResponse({ error: 'Update not allowed for this resource' }, 400);
+  }
+  assertIdentifiers(tableName, paramKey, ...updateableFields);
 
   const id = params[paramKey] as string;
   if (!id) {
@@ -64,6 +92,9 @@ export async function handleUpdateById(
 
   try {
     const body = await request.json() as Record<string, any>;
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      return jsonResponse({ error: 'Invalid JSON body' }, 400);
+    }
 
     // Verificar que existe
     const existing = await env.DB
@@ -75,14 +106,12 @@ export async function handleUpdateById(
       return jsonResponse({ error: `${tableName} not found` }, 404);
     }
 
-    // Construir UPDATE dinámico
+    // Construir UPDATE solo con columnas de la lista blanca
     const updates: string[] = [];
     const bindings: any[] = [];
 
-    const fieldsToUpdate = updateableFields || Object.keys(body);
-
-    for (const field of fieldsToUpdate) {
-      if (body[field] !== undefined) {
+    for (const field of updateableFields) {
+      if (Object.prototype.hasOwnProperty.call(body, field) && body[field] !== undefined) {
         updates.push(`${field} = ?`);
         bindings.push(body[field]);
       }
@@ -127,6 +156,7 @@ export async function handleDeleteById(
   if (authResult instanceof Response) {
     return authResult;
   }
+  assertIdentifiers(tableName, paramKey);
 
   const id = params[paramKey] as string;
   if (!id) {
