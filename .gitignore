@@ -3,10 +3,12 @@ node_modules/
 
 # Build output
 dist/
+public/admin/
 
 # Environment
 .env
 .env.*
+!.env.example
 
 # Logs
 *.log
